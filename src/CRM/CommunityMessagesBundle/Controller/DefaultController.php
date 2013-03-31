@@ -14,7 +14,7 @@ class DefaultController extends Controller
 
         $validations = array(
             'prot' => '/^1$/',
-            'sid' => '/^[a-zA-Z0-9]{16,64}$/',
+            'sid' => '/^[a-zA-Z0-9]{32}$/',
             'uf' => '/^(Drupal|Drupal6|WordPress|Joomla|UnitTests)$/',
             'ver' => '/^([0-9\.]|alpha|beta|dev|rc){2,12}$/',
         );
@@ -26,6 +26,18 @@ class DefaultController extends Controller
             }
             $params[$key] = $this->getRequest()->get($key);
         }
+
+        // Log request
+
+        $log = new \CRM\CommunityMessagesBundle\Entity\RequestLog();
+        $log->setTs(time());
+        $log->setProt((int)$params['prot']);
+        $log->setSid($params['sid']);
+        $log->setUf($params['uf']);
+        $log->setVer($params['ver']);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($log);
+        $em->flush();
 
         // Construct response
 
