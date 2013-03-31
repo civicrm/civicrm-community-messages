@@ -28,6 +28,13 @@ class RequestLog {
   private $ts;
 
   /**
+   * @var string
+   *
+   * @ORM\Column(name="ip", type="string", length=16)
+   */
+  private $ip;
+
+  /**
    * @var integer
    *
    * @ORM\Column(name="prot", type="smallint")
@@ -84,6 +91,23 @@ class RequestLog {
    */
   public function getTs() {
     return $this->ts;
+  }
+
+  /**
+   * @param string $ip
+   * @return RequestFailure
+   */
+  public function setIp($ip) {
+    $this->ip = $ip;
+
+    return $this;
+  }
+
+  /**
+   * @return string
+   */
+  public function getIp() {
+    return $this->ip;
   }
 
   /**

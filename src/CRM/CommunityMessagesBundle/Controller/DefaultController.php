@@ -6,8 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class DefaultController extends Controller {
   public function indexAction() {
-    // ini_set('session.use_cookies', '0');
-
     // Parse arguments
 
     $validations = array(
@@ -20,22 +18,14 @@ class DefaultController extends Controller {
     $params = array();
     foreach ($validations as $key => $regex) {
       if (!preg_match($regex, $this->getRequest()->get($key))) {
+        $this->createRequestFailure();
         return $this->renderJson($this->createErrorDocument("Error in $key"));
       }
       $params[$key] = $this->getRequest()->get($key);
     }
 
     // Log request
-
-    $log = new \CRM\CommunityMessagesBundle\Entity\RequestLog();
-    $log->setTs(time());
-    $log->setProt((int) $params['prot']);
-    $log->setSid($params['sid']);
-    $log->setUf($params['uf']);
-    $log->setVer($params['ver']);
-    $em = $this->getDoctrine()->getManager();
-    $em->persist($log);
-    $em->flush();
+    $this->createRequestLog($params);
 
     // Construct response
 
@@ -60,6 +50,31 @@ class DefaultController extends Controller {
     return array(
       'error' => $message,
     );
+  }
+
+  public function createRequestFailure() {
+    $log = new \CRM\CommunityMessagesBundle\Entity\RequestFailure();
+    $log->setTs(time());
+    $log->setIp($this->getRequest()->getClientIp());
+    $log->setQueryString($this->getRequest()->getQueryString());
+    $em = $this->getDoctrine()->getManager();
+    $em->persist($log);
+    $em->flush();
+    return $log;
+  }
+
+  public function createRequestLog($params) {
+    $log = new \CRM\CommunityMessagesBundle\Entity\RequestLog();
+    $log->setTs(time());
+    $log->setIp($this->getRequest()->getClientIp());
+    $log->setProt((int) $params['prot']);
+    $log->setSid($params['sid']);
+    $log->setUf($params['uf']);
+    $log->setVer($params['ver']);
+    $em = $this->getDoctrine()->getManager();
+    $em->persist($log);
+    $em->flush();
+    return $log;
   }
 
   public function renderJson($document) {
