@@ -1,0 +1,7 @@
+parameters:
+#    crm_community_messages.example.class: CRM\CommunityMessagesBundle\Example
+
+services:
+#    crm_community_messages.example:
+#        class: %crm_community_messages.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

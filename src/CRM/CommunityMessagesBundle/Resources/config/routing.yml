@@ -1,0 +1,3 @@
+crm_community_messages_homepage:
+    pattern:  /alerts
+    defaults: { _controller: CRMCommunityMessagesBundle:Default:index }

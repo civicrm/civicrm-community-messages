@@ -1,0 +1,4 @@
+crm_community_messages:
+    resource: "@CRMCommunityMessagesBundle/Resources/config/routing.yml"
+    prefix:   /
+
