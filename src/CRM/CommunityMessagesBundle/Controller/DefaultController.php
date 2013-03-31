@@ -26,7 +26,7 @@ class DefaultController extends Controller {
 
     // Log request
     $this->createRequestLog($params);
-    $this->updateSidSummary($params['sid']);
+    $this->updateSidSummary($params['sid'], $params['ver'], $params['uf']);
 
     // Construct response
 
@@ -78,16 +78,20 @@ class DefaultController extends Controller {
     return $log;
   }
 
-  public function updateSidSummary($sid) {
+  public function updateSidSummary($sid, $ver, $uf) {
     $cxn = $this->getDoctrine()->getConnection();
     $cxn->executeUpdate('
-      INSERT INTO SidSummary (sid, requests, created, modified)
-      VALUES (:sid, 1, :now, :now)
+      INSERT INTO SidSummary (sid, requests, created, modified, firstVer, firstUf, lastVer, lastUf)
+      VALUES (:sid, 1, :now, :now, :ver, :uf, :ver, :uf)
       ON DUPLICATE KEY UPDATE
         modified = :now,
+        lastVer = :ver,
+        lastUf = :uf,
         requests = requests + 1
     ', array(
       'sid' => $sid,
+      'ver' => $ver,
+      'uf' => $uf,
       'now' => time(),
     ));
   }

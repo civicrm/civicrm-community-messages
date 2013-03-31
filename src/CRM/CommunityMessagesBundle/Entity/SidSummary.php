@@ -42,6 +42,34 @@ class SidSummary {
   private $requests;
 
   /**
+   * @var string
+   *
+   * @ORM\Column(name="firstVer", type="string", length=32)
+   */
+  private $firstVer;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(name="lastVer", type="string", length=32)
+   */
+  private $lastVer;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(name="firstUf", type="string", length=16)
+   */
+  private $firstUf;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(name="lastUf", type="string", length=16)
+   */
+  private $lastUf;
+
+  /**
    * Set sid
    *
    * @param string $sid
@@ -119,4 +147,90 @@ class SidSummary {
   public function getRequests() {
     return $this->requests;
   }
+
+
+  /**
+   * Set ver
+   *
+   * @param string $ver
+   * @return SidSummary
+   */
+  public function setFirstVer($ver) {
+    $this->firstVer = $ver;
+
+    return $this;
+  }
+
+  /**
+   * Get ver
+   *
+   * @return string
+   */
+  public function getFirstVer() {
+    return $this->firstVer;
+  }
+
+  /**
+   * Set ver
+   *
+   * @param string $ver
+   * @return SidSummary
+   */
+  public function setLastVer($ver) {
+    $this->lastVer = $ver;
+
+    return $this;
+  }
+
+  /**
+   * Get ver
+   *
+   * @return string
+   */
+  public function getLastVer() {
+    return $this->lastVer;
+  }
+
+  /**
+   * Set uf
+   *
+   * @param string $uf
+   * @return SidSummary
+   */
+  public function setFirstUf($uf) {
+    $this->firstUf = $uf;
+
+    return $this;
+  }
+
+  /**
+   * Get uf
+   *
+   * @return string
+   */
+  public function getFirstUf() {
+    return $this->firstUf;
+  }
+
+  /**
+   * Set uf
+   *
+   * @param string $uf
+   * @return SidSummary
+   */
+  public function setLastUf($uf) {
+    $this->lastUf = $uf;
+
+    return $this;
+  }
+
+  /**
+   * Get uf
+   *
+   * @return string
+   */
+  public function getLastUf() {
+    return $this->lastUf;
+  }
+
 }

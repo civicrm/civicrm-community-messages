@@ -30,7 +30,13 @@ class RequestLog {
   /**
    * @var string
    *
-   * @ORM\Column(name="ip", type="string", length=16)
+   * IPv4 ==> (4*4)-1 chars
+   * IPv6 ==> (8*5)-1 chars
+   *
+   * There's some suggestion that IPv4 and IPv6 addresses
+   * can be combined. Ceiling: 54 chars
+   *
+   * @ORM\Column(name="ip", type="string", length=64)
    */
   private $ip;
 
