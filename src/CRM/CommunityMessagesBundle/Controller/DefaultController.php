@@ -26,6 +26,7 @@ class DefaultController extends Controller {
 
     // Log request
     $this->createRequestLog($params);
+    $this->updateSidSummary($params['sid']);
 
     // Construct response
 
@@ -75,6 +76,20 @@ class DefaultController extends Controller {
     $em->persist($log);
     $em->flush();
     return $log;
+  }
+
+  public function updateSidSummary($sid) {
+    $cxn = $this->getDoctrine()->getConnection();
+    $cxn->executeUpdate('
+      INSERT INTO SidSummary (sid, requests, created, modified)
+      VALUES (:sid, 1, :now, :now)
+      ON DUPLICATE KEY UPDATE
+        modified = :now,
+        requests = requests + 1
+    ', array(
+      'sid' => $sid,
+      'now' => time(),
+    ));
   }
 
   public function renderJson($document) {
