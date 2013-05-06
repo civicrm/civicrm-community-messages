@@ -23,12 +23,12 @@ request to the alert service:
  - __Example__: https://alert.civicrm.org/alert
    - ?prot=1
    - &ver=4.2.1
-   - &cms=Drupal6
+   - &uf=Drupal6
    - &sid=abc123def456
  - __Formula__: {$alertUrl}
    - ?prot={$protocolVersion}
     - &ver={$civiVersion}
-    - &cms={$ufName}
+    - &uf={$ufName}
     - &sid={$uniqueNonSensitiveCode}
 
 The response is a JSON document conforming to the CommunityMessages struct (below).
