@@ -91,8 +91,16 @@ struct CommunityMessage {
    * HTML markup; may include tokens:
    *  - %%resourceUrl%% -- raw resource URL
    *  - %%ver%% -- raw CiviCRM version
+   *  - %%uf%% -- type of CMS
+   *  - %%php%% -- PHP version number
+   *  - %%sid%% -- anonymized site id
+   *  - %%baseUrl%% -- web root
+   *  - %%lang%% -- language (e.g. en_US)
+   *  - %%co%% -- default country
    *  - {{resourceUrl}} -- url-encoded resource URL
    *  - {{ver}} -- url-encoded CiviCRM version
+   *
+   * Note: All tokens can use "%%...%%" or "{{...}}" notation.
    *
    * If omitted, then display a null message
    */
