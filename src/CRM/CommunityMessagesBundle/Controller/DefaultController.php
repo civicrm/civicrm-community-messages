@@ -38,8 +38,8 @@ class DefaultController extends Controller {
 
     $document['messages'][] = array(
       'markup' => '', // $this->renderView('CRMCommunityMessagesBundle:Default:stdalert.html.twig', $params),
-      'perms' => array('administer CiviCRM'),  <== default to "require administer CiviCRM"
-      'components' => array('CiviMail'), <== default to "no component filtering"
+      // 'perms' => array('administer CiviCRM'), // default to "require administer CiviCRM"
+      // 'components' => array('CiviMail'),      // default to "no component filtering"
     );
 
     return $this->renderJson($document);
