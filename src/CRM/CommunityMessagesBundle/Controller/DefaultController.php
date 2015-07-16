@@ -31,13 +31,14 @@ class DefaultController extends Controller {
     // Construct response
 
     $document = array(
-      'ttl' => 24 * 60 * 60, // 1 day
-      'retry' => 1.5 * 60 * 60, // 1.5 hours
+      'ttl' => 60, // TESTING: 1 minute
+      'retry' => 60, // TESTING: 1 minute
       'messages' => array(),
     );
 
     $document['messages'][] = array(
-      'markup' => '', // $this->renderView('CRMCommunityMessagesBundle:Default:stdalert.html.twig', $params),
+
+      'markup' => $this->renderView('CRMCommunityMessagesBundle:Default:stdalert.html.twig', $params),
       // 'perms' => array('administer CiviCRM'), // default to "require administer CiviCRM"
       // 'components' => array('CiviMail'),      // default to "no component filtering"
     );
