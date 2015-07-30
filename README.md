@@ -23,9 +23,9 @@ $ civibuild create messages --url http://messages.local
 ```
 git clone https://github.com/civicrm/civicrm-community-messages.git
 cd civicrm-community-messages
-composer install
 cp app/config/parameters.yml.dist app/config/parameters.yml
 vi app/config/parameters.yml
+composer install
 ./app/console doctrine:schema:create
 ```
 
@@ -37,5 +37,6 @@ By default, CiviCRM pulls messages from `https://alert.civicrm.org`. To
 display messages from your own installation, put this in `civicrm.settings.php`:
 
 ```php
-$civicrm_setting['CiviCRM Preferences']['communityMessagesUrl'] = 'http://messages.local/alert?prot=1&ver={ver}&uf={uf}&sid={sid}&lang={lang}&co={co}';
+$civicrm_setting['CiviCRM Preferences']['communityMessagesUrl']
+ = 'http://messages.local/alert?prot=1&ver={ver}&uf={uf}&sid={sid}&lang={lang}&co={co}';
 ```
