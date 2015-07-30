@@ -30,3 +30,12 @@ vi app/config/parameters.yml
 ```
 
 Then setup your http server (per preference).
+
+## Configuration (CiviCRM)
+
+By default, CiviCRM pulls messages from `https://alert.civicrm.org`. To
+display messages from your own installation, put this in `civicrm.settings.php`:
+
+```php
+$civicrm_setting['CiviCRM Preferences']['communityMessagesUrl'] = 'http://messages.local/alert?prot=1&ver={ver}&uf={uf}&sid={sid}&lang={lang}&co={co}';
+```
