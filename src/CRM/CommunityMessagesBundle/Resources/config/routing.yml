@@ -1,3 +1,7 @@
 crm_community_messages_homepage:
     pattern:  /alert
     defaults: { _controller: CRMCommunityMessagesBundle:Default:index }
+  
+crm_welcome_messages_homepage:
+    pattern:  /welcome
+    defaults: { _controller: CRMCommunityMessagesBundle:Welcome:index }
