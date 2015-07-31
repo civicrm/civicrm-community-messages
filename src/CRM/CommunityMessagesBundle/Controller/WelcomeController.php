@@ -109,11 +109,12 @@ class WelcomeController extends Controller {
           'heart' => '<a href="http://civicrm.org/become-member?src=gs" target="_blank">Become a member</a>',
         ),
     );
-
+    
+    $activeSites = $this->getSiteStats();
     // Header
     $output = '<div class="crm-block crm-content-block">';
-    $sites = number_format(9748);
-    $output .= "<div id=\"help\">New to the CiviCRM community? Welcome! You've joined <b>$sites</b> other organizations that actively use CiviCRM to do a world of good. Here are a few resources to help you get started.</div>";
+    $activeSites = number_format($activeSites);
+    $output .= "<div id=\"help\">New to the CiviCRM community? Welcome! You've joined <b>$activeSites</b> other organizations that actively use CiviCRM to do a world of good. Here are a few resources to help you get started.</div>";
 
     // Sections
     foreach ($sections as $title => $items) {
@@ -130,5 +131,17 @@ class WelcomeController extends Controller {
   public function iconHtml($assets, $icon, $size) {
     $source = "{$assets}/images/open-iconic/{$icon}.png";
     return "<img src=\"$source\" alt=\"$icon\"></img>";
-  }  
+  }
+  
+  public function getSiteStats() {
+    $activeSites = 10000;
+    $stats = file_get_contents('http://stats.civicrm.org/json/active-sites-stats.json');
+    if(!empty($stats)) {
+      $stats = reset(json_decode($stats, true));
+      if (!empty($stats) && !empty($stats['active_sites'])) {
+        $activeSites = $stats['active_sites'];
+      }
+    }
+    return $activeSites;
+  }
 }
