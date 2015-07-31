@@ -92,6 +92,7 @@ class WelcomeController extends Controller {
   }
   
   public function gettingStarted($params) {
+    $assets = $this->getRequest()->getUriForPath('/bundles/crmcommunitymessages');
     $sections = array(
       'Configure and extend' => array(
           'book' => '<a href="http://civicrm.org/documentation?src=gs" target="_blank">Documentation</a>',
@@ -118,7 +119,7 @@ class WelcomeController extends Controller {
     foreach ($sections as $title => $items) {
       $output .= "<h3>$title</h3><table><tbody>";
       foreach ($items as $icon => $html) {
-        $output .= "<tr><td width=8>".$this->iconHtml($icon, 8)."</td><td>$html</td></tr>";
+        $output .= "<tr><td width=8>".$this->iconHtml($assets, $icon, 8)."</td><td>$html</td></tr>";
       }
       $output .= "</tbody></table>";
     }
@@ -126,8 +127,8 @@ class WelcomeController extends Controller {
     return $output;
   }
 
-  public function iconHtml($icon, $size) {
-    $source = "{resourceUrl}/i/open-iconic/{$icon}.png";
+  public function iconHtml($assets, $icon, $size) {
+    $source = "{$assets}/images/open-iconic/{$icon}.png";
     return "<img src=\"$source\" alt=\"$icon\"></img>";
   }  
 }
