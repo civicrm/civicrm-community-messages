@@ -3,30 +3,55 @@
 namespace CRM\CommunityMessagesBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class DefaultController extends Controller {
+
+  /**
+   * @var \civicrm_api3
+   */
+  public $api;
+
+  /**
+   * @var array
+   */
+  public $args = array();
+
+  /**
+   * @var array
+   */
+  public $tokens = array();
+
+  public $membershipStatuses = array(
+    1 => 'New',
+    2 => 'Current',
+    3 => 'Grace',
+    4 => 'Expired',
+    5 => 'Pending',
+    6 => 'Cancelled',
+    7 => 'Deceased',
+  );
+
+  function __construct(ContainerInterface $container, \civicrm_api3 $api) {
+    $this->setContainer($container);
+    $this->api = $api;
+  }
+
   public function indexAction() {
-    // Parse arguments
-
-    $validations = array(
-      'prot' => '/^1$/',
-      'sid' => '/^[a-zA-Z0-9]{32}$/',
-      'uf' => '/^(Drupal|Drupal6|WordPress|Joomla|UnitTests)$/',
-      'ver' => '/^([0-9\.]|alpha|beta|dev|rc){2,12}$/',
-    );
-
-    $params = array();
-    foreach ($validations as $key => $regex) {
-      if (!preg_match($regex, $this->getRequest()->get($key))) {
-        $this->createRequestFailure();
-        return $this->renderJson($this->createErrorDocument("Error in $key"));
-      }
-      $params[$key] = $this->getRequest()->get($key);
+    try {
+      $this->getArguments();
+    } catch (\Exception $e) {
+      return $this->renderJson($this->createErrorDocument($e->getMessage()));
     }
 
     // Log request
-    $this->createRequestLog($params);
-    $this->updateSidSummary($params['sid'], $params['ver'], $params['uf']);
+    $this->createRequestLog($this->args);
+    $this->updateSidSummary($this->args['sid'], $this->args['ver'], $this->args['uf']);
+
+    $summary = $this->getSidSummary($this->args['sid']);
+
+    // Lookup requester
+    $this->getOrgTokens();
 
     // Construct response
 
@@ -36,13 +61,113 @@ class DefaultController extends Controller {
       'messages' => array(),
     );
 
-    $document['messages'][] = array(
-      'markup' => '', // $this->renderView('CRMCommunityMessagesBundle:Default:stdalert.html.twig', $params),
-      // 'perms' => array('administer CiviCRM'), // default to "require administer CiviCRM"
-      // 'components' => array('CiviMail'),      // default to "no component filtering"
+    // Mapping between string in the csv file and allowed statuses
+    $statusRules = array(
+      "yes" => array('New', 'Current', 'Grace'),
+      "new" => array('New'),
+      "expiring" => array('Current'),
+      "grace" => array('Grace'),
+      "past" => array('Expired', 'Cancelled', 'Deceased'),
     );
 
+    list($lang) = explode('_', $this->args['lang']);
+
+    // Iterate through every csv file in the content directory
+    foreach (glob($this->container->getParameter('kernel.root_dir') . '/Resources/content/*.csv') as $fileName) {
+      // Iterate through each line in the file
+      foreach ($this->getAssocCSV($fileName) as $row) {
+        // Server-side filters
+        if (($row['reg'] === 'yes' && empty($this->tokens)) || ($row['reg'] === 'no' && !empty($this->tokens))) {
+          continue;
+        }
+        if ($row['mem'] === 'never') {
+          if (!empty($this->tokens['membership_id'])) {
+            continue;
+          }
+        }
+        elseif ($row['mem']) {
+          if (empty($this->tokens['membership_id']) || !in_array($this->tokens['membership_status'], $statusRules[$row['mem']])) {
+            continue;
+          }
+          if ($row['mem'] === 'expiring' && $this->tokens['membership_end_date'] > date('Y-m-d', strtotime('now + 1 month'))) {
+            continue;
+          }
+        }
+        if ($row['age']) {
+          list ($op, $unit) = explode(' ', $row['age'], 2);
+          $diff = strtotime("now - $unit");
+          if (eval("return {$summary['created']} $op $diff;")) {
+            continue;
+          }
+        }
+        $row['content'] = empty($row[$lang]) ? $row['en'] : $row[$lang];
+        $data = $this->formatContent($row);
+        $item = array('markup' => $this->renderView('CRMCommunityMessagesBundle:Default:tips.html.twig', $data));
+        // Send clientside filters
+        foreach (array('perms', 'components') as $field) {
+          if ($row[$field]) {
+            $item[$field] = explode(',', str_replace(', ', ',', $row[$field]));
+          }
+        }
+        $document['messages'][] = $item;
+      }
+    }
+
     return $this->renderJson($document);
+  }
+
+  /**
+   * Format content for template rendering
+   *
+   * @param $row
+   * @return array
+   */
+  public function formatContent($row) {
+    // Add link
+    if ($row['url']) {
+      $row['content'] = str_replace('[[', '<a href="' . $row['url'] . '">', $row['content']);
+      $row['content'] = str_replace(']]', '</a>', $row['content']);
+    }
+
+    // Subtitute server-side tokens now that the link is part of the content
+    $vars = array();
+    foreach ($this->tokens as $k => $v) {
+      $vars['%%' . $k . '%%'] = $v;
+      $vars['{{' . $k . '}}'] = urlencode($v);
+    }
+    $row['content'] = strtr($row['content'], $vars);
+
+    list(, $title, $body) = explode('**', $row['content']);
+
+    return array('title' => $title, 'body' => $body);
+  }
+
+  public function getOrgTokens() {
+    $params = array(
+      'sequential' => 1,
+      'custom_189' => $this->args['sid'],
+      'return' => 'display_name',
+      'api.Membership.get' => array(
+        'membership_type_id' => array('IN' => array(4, 5, 6, 7, 8, 9)),
+        'options' => array('sort' => 'start_date DESC', 'limit' => 1),
+      ),
+    );
+    // FIXME: The api3 class is a bit dumb here, we shouldn't have to do the encoding for it but otherwise it doesn't handle arrays properly:
+    if ($this->api->Contact->get(array('json' => json_encode($params)))) {
+      foreach ($this->api->values as $contact) {
+        $this->tokens['display_name'] = $contact['display_name'];
+        $this->tokens['contact_id'] = $contact['id'];
+        if (!empty($contact['api.Membership.get']) && isset($contact['api.Membership.get']['id'])) {
+          $membership = $contact['api.Membership.get']['values'][0];
+          $this->tokens['membership_id'] = $membership['id'];
+          $this->tokens['membership_start_date'] = $membership['start_date'];
+          $this->tokens['membership_end_date'] = $membership['end_date'];
+          $this->tokens['membership_status_id'] = $membership['status_id'];
+          $this->tokens['membership_status'] = $this->membershipStatuses[$membership['status_id']];
+        }
+        break;
+      }
+    }
   }
 
   public function createErrorDocument($message) {
@@ -96,10 +221,65 @@ class DefaultController extends Controller {
     ));
   }
 
+  /**
+   * @param $sid
+   * @return array
+   */
+  public function getSidSummary($sid) {
+    $cxn = $this->getDoctrine()->getConnection();
+    $result = $cxn->executeQuery('SELECT * FROM SidSummary WHERE sid = :sid', array('sid' => $sid));
+    foreach ($result as $row) {
+      return $row;
+    }
+  }
+
   public function renderJson($document) {
     $response = new \Symfony\Component\HttpFoundation\Response(json_encode($document));
     $response->headers->set('Content-Type', 'application/json');
     return $response;
+  }
 
+  /**
+   * Transforms a csv into an associative array, with the header row as keys
+   *
+   * @param string $fileName
+   * @return array
+   */
+  public function getAssocCSV ($fileName) {
+    $file = fopen($fileName, 'r');
+    $data = array();
+    while ($row = fgetcsv($file)) {
+      if (!isset($head)) {
+        $head = array_map('trim', $row);
+      }
+      else {
+        $data[] = array_combine($head, array_map('trim', $row));
+      }
+    }
+    fclose($file);
+    return $data;
+  }
+
+  /**
+   * Collect and validate arguments
+   *
+   * @throws \Exception
+   */
+  public function getArguments() {
+    $validations = array(
+      'prot' => '/^1$/',
+      'sid' => '/^[a-zA-Z0-9]{32}$/',
+      'uf' => '/^(Drupal|Drupal6|WordPress|Joomla|UnitTests)$/',
+      'ver' => '/^([0-9\.]|alpha|beta|dev|rc){2,12}$/',
+      'lang' => '/^[a-z]+_[A-Z]+$/',
+    );
+
+    foreach ($validations as $key => $regex) {
+      if (!preg_match($regex, $this->getRequest()->get($key))) {
+        $this->createRequestFailure();
+        throw new \Exception("Error in $key");
+      }
+      $this->args[$key] = $this->getRequest()->get($key);
+    }
   }
 }

@@ -5,3 +5,14 @@ services:
 #    crm_community_messages.example:
 #        class: %crm_community_messages.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]
+  crm_community_messages.civicrm_api3:
+    class: civicrm_api3
+    arguments:
+      -
+        server: "%civicrm_org_url%"
+        api_key: "%civicrm_api_key%"
+        key: "%civicrm_org_key%"
+
+  crm_community_messages.default_controller:
+    class: CRM\CommunityMessagesBundle\Controller\DefaultController
+    arguments: ["@service_container", @crm_community_messages.civicrm_api3]
