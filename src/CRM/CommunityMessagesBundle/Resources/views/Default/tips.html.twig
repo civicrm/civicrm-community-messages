@@ -1,18 +1,32 @@
-<div style="border: 2px solid #5D677B; padding: 10px;" class="crm-community-messages">
-  <img src="%%resourceUrl%%/i/logo_lg.png" style="display:block; float:left; width:20px; margin-right:10px;">
-  <div class="crm-collapsible collapsed">
-    <div class="collapsible-title" style="font-weight: bold; color: darkblue; background: none;">
-      <a style="float: right;" class="crm-hover-button action-item">Learn More</a>
-      {{ title|raw }}
-    </div>
-    <div>{{ body|raw }}</div>
-  </div>
-</div>
 <style type="text/css">
-  div.crm-community-messages .collapsible-title .action-item {
+  div.civicrm-community-messages .collapsible-title .ui-icon {
     display: none;
   }
-  div.crm-community-messages .collapsed .collapsible-title .action-item {
-    display: inline;
+  div.civicrm-community-messages .collapsed .collapsible-title .ui-icon {
+    display: block;
+    float: right;
+    opacity: .6;
+  }
+  div.civicrm-community-messages:hover .collapsed .collapsible-title .ui-icon {
+    opacity: 1;
+  }
+  div.civicrm-community-messages .collapsed .collapsible-title div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  div.civicrm-community-messages .collapsed .collapsible-title div:after {
+    content: " \2026";
   }
 </style>
+
+<div style="border: 2px solid #7dc857; padding: 10px;" class="civicrm-community-messages">
+  <img src="%%resourceUrl%%/i/Bulb.png" style="display:block; float:left; width:20px; margin-right:10px;">
+  <div class="crm-collapsible collapsed">
+    <div class="collapsible-title" style="font-weight: normal; color: #056085; background: none;">
+      <span class="ui-icon ui-icon-circle-plus"></span>
+      <div>{{ title|raw }}</div>
+    </div>
+    <div style="margin-top: 1em;">{{ body|raw }}</div>
+  </div>
+</div>
