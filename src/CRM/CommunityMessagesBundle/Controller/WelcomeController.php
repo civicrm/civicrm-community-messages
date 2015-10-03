@@ -105,8 +105,8 @@ class WelcomeController extends Controller {
           'people' => '<a href="http://civicrm.org/experts?src=gs " target="_blank">Get expert help</a>',
         ),
       'Join the community' => array(
-          'flag' => '<a href="http://civicrm.org/register-your-site?src=gs" target="_blank">Register your site</a>',
-          'heart' => '<a href="http://civicrm.org/become-member?src=gs" target="_blank">Become a member</a>',
+          'flag' => '<a href="http://civicrm.org/register-your-site?src=gs&sid='. $params['sid'] .'" target="_blank">Register your site</a>',
+          'heart' => '<a href="http://civicrm.org/become-a-member?src=gs&sid='. $params['sid'] .'" target="_blank">Become a member</a>',
         ),
     );
     
@@ -130,7 +130,7 @@ class WelcomeController extends Controller {
 
   public function iconHtml($assets, $icon, $size) {
     $source = "{$assets}/images/open-iconic/{$icon}.png";
-    return "<img src=\"$source\" alt=\"$icon\"></img>";
+    return "<img src=\"$source\" alt=\"$icon\" />";
   }
   
   public function getSiteStats() {

@@ -145,7 +145,7 @@ class DefaultController extends Controller {
   public function getOrgTokens() {
     $params = array(
       'sequential' => 1,
-      'custom_189' => $this->args['sid'],
+      'custom_193' => $this->args['sid'],
       'return' => 'display_name',
       'api.Membership.get' => array(
         'membership_type_id' => array('IN' => array(4, 5, 6, 7, 8, 9)),
