@@ -7,6 +7,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class DefaultController extends Controller {
 
+  const CONTENT_SOURCE = 'https://docs.google.com/spreadsheets/d/1OnJXtxTaS3FfQRMHLffPETdDKk3OHmd1fxLc8zQt9PE/pub?gid=0&single=true&output=csv';
+
   /**
    * @var \civicrm_api3
    */
@@ -72,10 +74,15 @@ class DefaultController extends Controller {
 
     list($lang) = explode('_', $this->args['lang']);
 
-    // Iterate through every csv file in the content directory
-    foreach (glob($this->container->getParameter('kernel.root_dir') . '/Resources/content/*.csv') as $fileName) {
+    $fileName = $this->getContent();
+
+    if ($fileName) {
       // Iterate through each line in the file
       foreach ($this->getAssocCSV($fileName) as $row) {
+        // Skip disabled messages
+        if ($row['live'] !== 'yes') {
+          continue;
+        }
         // Server-side filters
         if (($row['reg'] === 'yes' && empty($this->tokens)) || ($row['reg'] === 'no' && !empty($this->tokens))) {
           continue;
@@ -281,5 +288,26 @@ class DefaultController extends Controller {
       }
       $this->args[$key] = $this->getRequest()->get($key);
     }
+  }
+
+  /**
+   * Downloads content file and caches it for an hour
+   * @return string
+   */
+  private function getContent() {
+    $fs = $this->get('filesystem');
+    $dir = $this->container->getParameter('kernel.cache_dir') . '/community_msg';
+    $fileName = $dir . '/content.csv';
+    $cacheTime = strtotime('now - 1 hour');
+
+    if (!$fs->exists($dir)) {
+      $fs->mkdir($dir);
+    }
+
+    if (!$fs->exists($fileName) || filemtime($fileName) < $cacheTime) {
+      file_put_contents($fileName, fopen(self::CONTENT_SOURCE, 'r'));
+    }
+
+    return $fileName;
   }
 }
