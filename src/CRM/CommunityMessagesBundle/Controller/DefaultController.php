@@ -24,6 +24,19 @@ class DefaultController extends Controller {
    */
   public $tokens = array();
 
+  /**
+   * @var bool
+   */
+  public $isTest = FALSE;
+
+  /**
+   * @var string
+   */
+  public $tplFile = 'CRMCommunityMessagesBundle:Default:tips.html.twig';
+
+  /**
+   * @var array
+   */
   public $membershipStatuses = array(
     1 => 'New',
     2 => 'Current',
@@ -40,6 +53,8 @@ class DefaultController extends Controller {
   }
 
   public function indexAction() {
+    $this->isTest = $this->getRequest()->get('sid') == 'test_mode';
+
     try {
       $this->getArguments();
     } catch (\Exception $e) {
@@ -58,7 +73,8 @@ class DefaultController extends Controller {
     // Construct response
 
     $document = array(
-      'ttl' => 24 * 60 * 60, // 1 day
+      // Expire in 1 day in normal mode, or 1 second in test mode
+      'ttl' => $this->isTest ? 1 : 24 * 60 * 60,
       'retry' => 1.5 * 60 * 60, // 1.5 hours
       'messages' => array(),
     );
@@ -80,36 +96,41 @@ class DefaultController extends Controller {
       // Iterate through each line in the file
       foreach ($this->getAssocCSV($fileName) as $row) {
         // Skip disabled messages
-        if ($row['live'] !== 'yes') {
-          continue;
-        }
-        // Server-side filters
-        if (($row['reg'] === 'yes' && empty($this->tokens)) || ($row['reg'] === 'no' && !empty($this->tokens))) {
-          continue;
-        }
-        if ($row['mem'] === 'never') {
-          if (!empty($this->tokens['membership_id'])) {
+        if ($row['live'] === 'yes') {
+          // Server-side filters
+          if (($row['reg'] === 'yes' && empty($this->tokens)) || ($row['reg'] === 'no' && !empty($this->tokens))) {
             continue;
           }
-        }
-        elseif ($row['mem']) {
-          if (empty($this->tokens['membership_id']) || !in_array($this->tokens['membership_status'], $statusRules[$row['mem']])) {
-            continue;
+          if ($row['mem'] === 'never') {
+            if (!empty($this->tokens['membership_id'])) {
+              continue;
+            }
           }
-          if ($row['mem'] === 'expiring' && $this->tokens['membership_end_date'] > date('Y-m-d', strtotime('now + 1 month'))) {
-            continue;
+          elseif ($row['mem']) {
+            if (empty($this->tokens['membership_id']) || !in_array($this->tokens['membership_status'], $statusRules[$row['mem']])) {
+              continue;
+            }
+            if ($row['mem'] === 'expiring' && $this->tokens['membership_end_date'] > date('Y-m-d', strtotime('now + 1 month'))) {
+              continue;
+            }
+          }
+          if ($row['age']) {
+            list ($op, $unit) = explode(' ', $row['age'], 2);
+            $diff = strtotime("now - $unit");
+            if (eval("return {$summary['created']} $op $diff;")) {
+              continue;
+            }
           }
         }
-        if ($row['age']) {
-          list ($op, $unit) = explode(' ', $row['age'], 2);
-          $diff = strtotime("now - $unit");
-          if (eval("return {$summary['created']} $op $diff;")) {
+        else {
+          // Skip non-live messages except for test messages in test mode
+          if (!($row['live'] === 'test' && $this->isTest)) {
             continue;
           }
         }
         $row['content'] = empty($row[$lang]) ? $row['en'] : $row[$lang];
         $data = $this->formatContent($row);
-        $item = array('markup' => $this->renderView('CRMCommunityMessagesBundle:Default:tips.html.twig', $data));
+        $item = array('markup' => $this->renderView($this->tplFile, $data));
         // Send clientside filters
         foreach (array('perms', 'components') as $field) {
           if ($row[$field]) {
@@ -282,7 +303,7 @@ class DefaultController extends Controller {
     );
 
     foreach ($validations as $key => $regex) {
-      if (!preg_match($regex, $this->getRequest()->get($key))) {
+      if (!$this->isTest && !preg_match($regex, $this->getRequest()->get($key))) {
         $this->createRequestFailure();
         throw new \Exception("Error in $key");
       }
@@ -298,7 +319,8 @@ class DefaultController extends Controller {
     $fs = $this->get('filesystem');
     $dir = $this->container->getParameter('kernel.cache_dir') . '/community_msg';
     $fileName = $dir . '/content.csv';
-    $cacheTime = strtotime('now - 1 hour');
+    // Test mode forces immediate refresh
+    $cacheTime = $this->isTest ? time() : strtotime('now - 1 hour');
 
     if (!$fs->exists($dir)) {
       $fs->mkdir($dir);
