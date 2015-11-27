@@ -1,13 +1,23 @@
 <style type="text/css">
-  div.civicrm-community-messages .collapsible-title .ui-icon {
-    display: none;
+  div.civicrm-community-messages {
+    border: 2px solid #7dc857;
+    padding: 10px;
+    position: relative;
   }
-  div.civicrm-community-messages .collapsed .collapsible-title .ui-icon {
-    display: block;
-    float: right;
+  div.civicrm-community-messages .crm-collapsible .collapsible-title {
+    font-weight: normal;
+    color: #056085;
+  }
+  div.civicrm-community-messages .crm-collapsible .collapsible-title:hover {
+    color: #003676;
+  }
+  div.civicrm-community-messages a.civicrm-community-message-dismiss {
+    position: absolute;
     opacity: .6;
+    top: 2px;
+    right: 2px;
   }
-  div.civicrm-community-messages:hover .collapsed .collapsible-title .ui-icon {
+  div.civicrm-community-messages a.civicrm-community-message-dismiss:hover {
     opacity: 1;
   }
   div.civicrm-community-messages .collapsed .collapsible-title div {
@@ -20,13 +30,42 @@
   }
 </style>
 
-<div style="border: 2px solid #7dc857; padding: 10px;" class="civicrm-community-messages">
-  <img src="%%resourceUrl%%/i/Bulb.png" style="display:block; float:left; width:20px; margin-right:10px;">
+{# Messages are intiailly hidden then shown via js instead of the other way around to avoid initial flash #}
+<div style="display:none" class="civicrm-community-messages">
+  <a href="javascript:void(0)" class="civicrm-community-message-dismiss ui-icon ui-icon-circle-close" title="Dismiss"></a>
   <div class="crm-collapsible collapsed">
-    <div class="collapsible-title" style="font-weight: normal; color: #056085; background: none;">
-      <span class="ui-icon ui-icon-circle-plus"></span>
+    <div class="collapsible-title">
       <div>{{ title|raw }}</div>
     </div>
     <div style="margin-top: 1em;">{{ body|raw }}</div>
   </div>
 </div>
+
+<script type="text/javascript">
+  (function ($) {
+    $(function () {
+      if (window.localStorage) {
+        {# Get prefs stored in local storage #}
+        $('div.civicrm-community-messages').each(function () {
+          var content = $(this).text(),
+              pref = localStorage.getItem('hide-community-message:' + content);
+          {# Show messages that have not been hidden by the user #}
+          if (pref !== 'forever') {
+            $(this).show();
+          }
+        });
+        $('a.civicrm-community-message-dismiss').click(function () {
+          var content = $(this).closest('.civicrm-community-messages').text();
+          localStorage.setItem('hide-community-message:' + content, 'forever');
+        });
+      } else {
+        {# If no local storage (older browser), just show all messages #}
+        $('div.civicrm-community-messages').show();
+      }
+      $('a.civicrm-community-message-dismiss').click(function () {
+        $(this).closest('.civicrm-community-messages').slideUp();
+      });
+    });
+    {# Community messages are displayed in 4.3+ but CRM.$ was introduced in 4.4 - use cj for backward compat #}
+  })(cj || CRM.$);
+</script>
