@@ -180,8 +180,7 @@ class DefaultController extends Controller {
         'options' => array('sort' => 'start_date DESC', 'limit' => 1),
       ),
     );
-    // FIXME: The api3 class is a bit dumb here, we shouldn't have to do the encoding for it but otherwise it doesn't handle arrays properly:
-    if ($this->api->Contact->get(array('json' => json_encode($params)))) {
+    if ($this->api->Contact->get($params)) {
       foreach ($this->api->values as $contact) {
         $this->tokens['display_name'] = $contact['display_name'];
         $this->tokens['contact_id'] = $contact['id'];
