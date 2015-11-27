@@ -1,7 +1,7 @@
 Updating Community Tips:
 ========================
 
-Community tips are stored in [tips.csv](/app/Resources/content/tips.csv). All tips in the spreadsheet will be shown to users on a random/rotating basis. Users will only be shown a message if they meet all the specified criteria.
+Community tips are stored in a [Google Spreadsheet](https://docs.google.com/spreadsheets/d/1OnJXtxTaS3FfQRMHLffPETdDKk3OHmd1fxLc8zQt9PE/edit). All tips in the spreadsheet will be shown to users on a random/rotating basis. Users will only be shown a message if they meet all the specified criteria.
 
 Note: the order of the columns in the spreadsheet does not matter, but the names do. Do not rename any column header without also updating the code which depends on it.
 
@@ -10,6 +10,9 @@ Columns
 <dl>
   <h4>Criteria:</h4>
 
+  <dt>live</dt>
+  <dd>("yes" "no" or "test"). <b>Warning</b> when this column is "yes" the message will <i>automatically</i> be published (generally in about an hour).</dd>
+  
   <dt>reg</dt>
   <dd>Has this site registered? ("yes"/"no" or leave blank for no filtering). This is currently difficult to determine and there are many registered sites this system doesn't know about.</dd>
   
@@ -64,3 +67,8 @@ The following will only work if we can identify the org and look them up in our 
 | membership_end_date          | End date (members only)                                            |
 | membership_status_id         | Id of membership status (members only)                             |
 | membership_status            | Name of membership status (members only)                           |
+
+Testing
+-------
+
+Any CiviCRM site can be used for testing messages. By setting the site_id to "test_mode" (`CRM.api3('Setting', 'create', {site_id: "test_mode"})` from the javascript console) the site will show messages where "live" is set to "yes" *or* "test". This setting also bypasses caching so that changes to the google spreadsheet will be visible in about 30 seconds instead of an hour.
