@@ -1,7 +1,7 @@
-Updating Community Tips:
+Updating Community Messages:
 ========================
 
-Community tips are stored in a [Google Spreadsheet](https://docs.google.com/spreadsheets/d/1OnJXtxTaS3FfQRMHLffPETdDKk3OHmd1fxLc8zQt9PE/edit). All tips in the spreadsheet will be shown to users on a random/rotating basis. Users will only be shown a message if they meet all the specified criteria.
+Community messages are stored in a [Google Spreadsheet](https://docs.google.com/spreadsheets/d/1OnJXtxTaS3FfQRMHLffPETdDKk3OHmd1fxLc8zQt9PE/edit). All items in the spreadsheet will be shown to users on a random/rotating basis. Users will only be shown a message if they meet all the specified criteria.
 
 Note: the order of the columns in the spreadsheet does not matter, but the names do. Do not rename any column header without also updating the code which depends on it.
 

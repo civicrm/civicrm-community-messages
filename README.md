@@ -1,8 +1,10 @@
 # CiviCRM Community Messages
 
 CiviCRM includes a few places in the user-interface that display blurbs or
-messages from civicrm.org.  This backend application which hosts those
+messages from civicrm.org.  This backend application hosts those
 messages.  It's based on [Symfony Standard Edition (~2.2)](http://symfony.com/doc/2.2/index.html).
+
+Content authors see: [Editing and updating messages](doc/messages.md)
 
 ## Installation (Buildkit)
 
