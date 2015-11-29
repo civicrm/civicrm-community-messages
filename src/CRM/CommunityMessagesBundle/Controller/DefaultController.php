@@ -153,7 +153,7 @@ class DefaultController extends Controller {
   public function formatContent($row) {
     // Add link
     if ($row['url']) {
-      $row['content'] = str_replace('[[', '<a href="' . $row['url'] . '">', $row['content']);
+      $row['content'] = str_replace('[[', '<a target="_blank" href="' . $row['url'] . '">', $row['content']);
       $row['content'] = str_replace(']]', '</a>', $row['content']);
     }
 
