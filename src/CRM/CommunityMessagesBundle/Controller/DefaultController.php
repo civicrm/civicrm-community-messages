@@ -296,7 +296,7 @@ class DefaultController extends Controller {
     $validations = array(
       'prot' => '/^1$/',
       'sid' => '/^[a-zA-Z0-9]{32}$/',
-      'uf' => '/^(Drupal|Drupal6|WordPress|Joomla|UnitTests)$/',
+      'uf' => '/^(Backdrop|Drupal|Drupal6|Drupal8|WordPress|Joomla|UnitTests)$/',
       'ver' => '/^([0-9\.]|alpha|beta|dev|rc){2,12}$/',
       'lang' => '/^[a-z]+_[A-Z]+$/',
     );
