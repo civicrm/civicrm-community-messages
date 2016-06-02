@@ -42,3 +42,19 @@ display messages from your own installation, put this in `civicrm.settings.php`:
 $civicrm_setting['CiviCRM Preferences']['communityMessagesUrl']
  = 'http://messages.local/alert?prot=1&ver={ver}&uf={uf}&sid={sid}&lang={lang}&co={co}';
 ```
+
+## Troubleshooting
+
+### 504 Gateway Timeout
+
+Check the error log on www-prod:
+
+```tail -f /var/log/nginx/alert.error.log```
+
+Try clearing the symphony app cache:
+
+```
+sudo -i -u commsg
+cd /var/www/alert.civicrm.org/app
+./console cache:clear -e prod
+```
