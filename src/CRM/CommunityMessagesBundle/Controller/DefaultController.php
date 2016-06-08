@@ -121,6 +121,17 @@ class DefaultController extends Controller {
               continue;
             }
           }
+          if ($row['ver']) {
+            list ($op, $ver) = explode(' ', $row['ver'], 2);
+            if (!version_compare($this->args['ver'], $ver, $op)) {
+              continue;
+            }
+          }
+          if ($row['cms']) {
+            if (strpos(strtolower($this->args['uf']), strtolower($row['cms'])) !== 0) {
+              continue;
+            }
+          }
         }
         else {
           // Skip non-live messages except for test messages in test mode
