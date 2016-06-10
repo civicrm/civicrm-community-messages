@@ -330,13 +330,23 @@ class DefaultController extends Controller {
       'ver' => '/^([0-9\.]|alpha|beta|dev|rc){2,12}$/',
       'lang' => '/^[a-z]+_[A-Z]+$/',
     );
+    $defaults = array(
+      'lang' => 'en_US',
+    );
 
     foreach ($validations as $key => $regex) {
       if (!$this->isTest && !preg_match($regex, $this->getRequest()->get($key))) {
-        $this->createRequestFailure();
-        throw new \Exception("Error in $key");
+        if (isset($defaults[$key])) {
+          $this->args[$key] = $defaults[$key];
+        }
+        else {
+          $this->createRequestFailure();
+          throw new \Exception("Error in $key");
+        }
       }
-      $this->args[$key] = $this->getRequest()->get($key);
+      else {
+        $this->args[$key] = $this->getRequest()->get($key);
+      }
     }
   }
 
