@@ -19,14 +19,20 @@ Columns
   <dt>mem</dt>
   <dd>Are they a member? ("never", "yes", "new", "expiring", "grace", "past", or leave blank for no filtering). Note: "yes" encompasses "expiring" "new" and "grace".</dd>
   
+  <dt>age</dt>
+  <dd>How old is this site? Requires an operator (&lt; or &gt;) + relative date. Examples: "&lt; 2 months", "&gt; 1 year"</dd>
+  
+  <dt>ver</dt>
+  <dd>Version of CiviCRM. Requires an operator (&lt;, &lt;=, &gt;, &gt;=, ==, !=) + version number. Examples: "&lt; 4.7", "&gt;= 4.6.5"</dd>
+  
+  <dt>cms</dt>
+  <dd>Drupal, Wordpress, Joomla, or Backdrop.</dd>
+  
   <dt>components</dt>
   <dd>(comma-separated e.g. "CiviMail,CiviMember") - if supplied, message will be hidden if any listed components are disabled.</dd>
   
   <dt>perms</dt>
   <dd>(comma-separated e.g. "access CiviCRM") - if supplied, only users with this permission will see the message. If left blank, defaults to "administer CiviCRM".</dd>
-  
-  <dt>age</dt>
-  <dd>How old is this site? Requires an operator (&lt; or &gt;) + relative date. Examples: "&lt; 2 months", "&gt; 1 year"</dd>
   
   <h4>Content:</h4>
   

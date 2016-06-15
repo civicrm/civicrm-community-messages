@@ -47,6 +47,17 @@ class DefaultController extends Controller {
     7 => 'Deceased',
   );
 
+  /**
+   * Mapping between string in the csv file and allowed statuses
+   */ 
+  public $statusRules = array(
+    "yes" => array('New', 'Current', 'Grace'),
+    "new" => array('New'),
+    "expiring" => array('Current'),
+    "grace" => array('Grace'),
+    "past" => array('Expired', 'Cancelled', 'Deceased'),
+  );
+
   function __construct(ContainerInterface $container, \civicrm_api3 $api) {
     $this->setContainer($container);
     $this->api = $api;
@@ -65,8 +76,6 @@ class DefaultController extends Controller {
     $this->createRequestLog($this->args);
     $this->updateSidSummary($this->args['sid'], $this->args['ver'], $this->args['uf']);
 
-    $summary = $this->getSidSummary($this->args['sid']);
-
     // Lookup requester
     $this->getOrgTokens();
 
@@ -79,15 +88,6 @@ class DefaultController extends Controller {
       'messages' => array(),
     );
 
-    // Mapping between string in the csv file and allowed statuses
-    $statusRules = array(
-      "yes" => array('New', 'Current', 'Grace'),
-      "new" => array('New'),
-      "expiring" => array('Current'),
-      "grace" => array('Grace'),
-      "past" => array('Expired', 'Cancelled', 'Deceased'),
-    );
-
     list($lang) = explode('_', $this->args['lang']);
 
     $fileName = $this->getContent();
@@ -95,38 +95,8 @@ class DefaultController extends Controller {
     if ($fileName) {
       // Iterate through each line in the file
       foreach ($this->getAssocCSV($fileName) as $row) {
-        // Skip disabled messages
-        if ($row['live'] === 'yes') {
-          // Server-side filters
-          if (($row['reg'] === 'yes' && empty($this->tokens)) || ($row['reg'] === 'no' && !empty($this->tokens))) {
-            continue;
-          }
-          if ($row['mem'] === 'never') {
-            if (!empty($this->tokens['membership_id'])) {
-              continue;
-            }
-          }
-          elseif ($row['mem']) {
-            if (empty($this->tokens['membership_id']) || !in_array($this->tokens['membership_status'], $statusRules[$row['mem']])) {
-              continue;
-            }
-            if ($row['mem'] === 'expiring' && $this->tokens['membership_end_date'] > date('Y-m-d', strtotime('now + 1 month'))) {
-              continue;
-            }
-          }
-          if ($row['age']) {
-            list ($op, $unit) = explode(' ', $row['age'], 2);
-            $diff = strtotime("now - $unit");
-            if (eval("return {$summary['created']} $op $diff;")) {
-              continue;
-            }
-          }
-        }
-        else {
-          // Skip non-live messages except for test messages in test mode
-          if (!($row['live'] === 'test' && $this->isTest)) {
-            continue;
-          }
+        if (!$this->checkFilters($row)) {
+          continue;
         }
         $row['content'] = empty($row[$lang]) ? $row['en'] : $row[$lang];
         $data = $this->formatContent($row);
@@ -142,6 +112,61 @@ class DefaultController extends Controller {
     }
 
     return $this->renderJson($document);
+  }
+
+  /**
+   * Check if a message is relevant based on filters
+   *
+   * @param $row
+   * @return bool
+   */
+  public function checkFilters($row) {
+    // Skip disabled messages
+    if ($row['live'] === 'yes') {
+      // Server-side filters
+      if (($row['reg'] === 'yes' && empty($this->tokens)) || ($row['reg'] === 'no' && !empty($this->tokens))) {
+        return FALSE;
+      }
+      if ($row['mem'] === 'never') {
+        if (!empty($this->tokens['membership_id'])) {
+          return FALSE;
+        }
+      }
+      elseif ($row['mem']) {
+        if (empty($this->tokens['membership_id']) || !in_array($this->tokens['membership_status'], $this->statusRules[$row['mem']])) {
+          return FALSE;
+        }
+        if ($row['mem'] === 'expiring' && $this->tokens['membership_end_date'] > date('Y-m-d', strtotime('now + 1 month'))) {
+          return FALSE;
+        }
+      }
+      if ($row['age']) {
+        list ($op, $unit) = explode(' ', $row['age'], 2);
+        $diff = strtotime("now - $unit");
+        $summary = $this->getSidSummary($this->args['sid']);
+        if (eval("return {$summary['created']} $op $diff;")) {
+          return FALSE;
+        }
+      }
+      if ($row['ver']) {
+        list ($op, $ver) = explode(' ', $row['ver'], 2);
+        if (!version_compare($this->args['ver'], $ver, $op)) {
+          return FALSE;
+        }
+      }
+      if ($row['cms']) {
+        if (strpos(strtolower($this->args['uf']), strtolower($row['cms'])) !== 0) {
+          return FALSE;
+        }
+      }
+    }
+    else {
+      // Skip non-live messages except for test messages in test mode
+      if (!($row['live'] === 'test' && $this->isTest)) {
+        return FALSE;
+      }
+    }
+    return TRUE;
   }
 
   /**
@@ -197,9 +222,14 @@ class DefaultController extends Controller {
     }
   }
 
+  /**
+   * From client's perspective, this is an invalid document. It will be
+   * discarded (and eventually client will retry).
+   *
+   * @param $message
+   * @return array
+   */
   public function createErrorDocument($message) {
-    // From client's perspective, this is an invalid document. It will be
-    // discarded (and eventually client will retry).
     return array(
       'error' => $message,
     );
@@ -300,13 +330,23 @@ class DefaultController extends Controller {
       'ver' => '/^([0-9\.]|alpha|beta|dev|rc){2,12}$/',
       'lang' => '/^[a-z]+_[A-Z]+$/',
     );
+    $defaults = array(
+      'lang' => 'en_US',
+    );
 
     foreach ($validations as $key => $regex) {
       if (!$this->isTest && !preg_match($regex, $this->getRequest()->get($key))) {
-        $this->createRequestFailure();
-        throw new \Exception("Error in $key");
+        if (isset($defaults[$key])) {
+          $this->args[$key] = $defaults[$key];
+        }
+        else {
+          $this->createRequestFailure();
+          throw new \Exception("Error in $key");
+        }
       }
-      $this->args[$key] = $this->getRequest()->get($key);
+      else {
+        $this->args[$key] = $this->getRequest()->get($key);
+      }
     }
   }
 
