@@ -1,4 +1,7 @@
 <?php
+// Testing URL:
+// https://alert.civicrm.org/welcome?prot=1&ver=4.6.6&uf=UnitTests&sid=12345678901234567890123456789012&en_US&co=1013
+// Change parameters as needed
 
 namespace CRM\CommunityMessagesBundle\Controller;
 
@@ -95,32 +98,84 @@ class WelcomeController extends Controller {
     $assets = $this->getRequest()->getUriForPath('/bundles/crmcommunitymessages');
     $sections = array(
       'Configure and extend' => array(
-          'book' => '<a href="http://civicrm.org/documentation?src=gs" target="_blank">Documentation</a>',
-          'align-left' => '<a href="{crmurl.configbackend}">Configuration checklist</a>',
-          'puzzle-piece' => '<a href="http://civicrm.org/extensions?src=gs" target="_blank">Extensions directory</a>',
-         ),
-      'Get help' => array(
-          'question-mark' => '<a href="http://civicrm.org/ask-a-question?src=gs" target="_blank">Ask a question</a>',
-          'microphone' => '<a href="http://civicrm.org/upcoming-events?src=gs" target="_blank">Upcoming training and events</a>',
-          'people' => '<a href="http://civicrm.org/experts?src=gs " target="_blank">Get expert help</a>',
+        'Admin Console' => array(
+          'icon' => 'align-left',
+          'html' => '<a href="{crmurl.configbackend}">Configuration checklist</a>',
         ),
-      'Join the community' => array(
-          'flag' => '<a href="http://civicrm.org/register-your-site?src=gs&sid='. $params['sid'] .'" target="_blank">Register your site</a>',
-          'heart' => '<a href="http://civicrm.org/become-a-member?src=gs&sid='. $params['sid'] .'" target="_blank">Become a member</a>',
+        'Extensions Dir' => array(
+          'icon' => 'puzzle-piece',
+          'html' => '<a href="https://civicrm.org/extensions?src=gs" target="_blank">Enhance CiviCRM with extensions</a>',
         ),
+        'CiviConnect' => array(
+          'icon' => 'fullscreen-exit',
+          'html' => '<a href="{crmurl p=\'a/#/cxn\'}" target="_blank">Manage connected services</a>',
+        ),
+        'Documentation' => array(
+          'icon' => 'book',
+          'html' => '<a href="https://civicrm.org/documentation?src=gs" target="_blank">Review CiviCRM documentation</a>',
+        ),
+      ),
+      'Get support' => array(
+        'Chat' => array(
+          'icon' => 'chat',
+          'html' => '<a href="https://chat.civicrm.org?src=gs" target="_blank">Jump in and chat with the community</a>',
+        ),
+        'StackExchange' => array(
+          'icon' => 'question-mark',
+          'html' => '<a href="http://civicrm.stackexchange.com" target="_blank">Ask a question on Stack Exchange</a>',
+        ),
+        'Trainings' => array(
+          'icon' => 'microphone',
+          'html' => '<a href="https://civicrm.org/upcoming-events?src=gs" target="_blank">Find upcoming trainings</a>',
+        ),
+        'Experts' => array(
+          'icon' => 'people',
+          'html' => '<a href="https://civicrm.org/experts?src=gs " target="_blank">Get support from the CiviCRM experts</a>',
+        ),
+      ),
+      'Get involved' => array(
+        'Register' => array(
+          'icon' => 'monitor',
+          'html' => '<a href="https://civicrm.org/user/register?src=gs" target="_blank">Register with</a> or <a href="https://civicrm.org/user?src=gs" target="_blank">log into</a> CiviCRM.org',
+        ),
+        'Preferences' => array(
+          'icon' => 'magnifying-glass',
+          'html' => '<a href="https://civicrm.org/update-my-mailing-preferences" target="_blank">Manage your preferences with CiviCRM</a>',
+        ),
+        'Register your site' => array(
+          'icon' => 'flag',
+          'html' => '<a href="https://civicrm.org/register-your-site?src=gs&sid='. $params['sid'] .'" target="_blank">Register your site with CiviCRM</a>',
+        ),
+        'Meetups' => array(
+          'icon' => 'map',
+          'html' => '<a href="https://civicrm.org/meet-ups?src=gs" target="_blank">Find a meetup in your area</a>',
+        ),
+        'Become a member' => array(
+          'icon' => 'person',
+          'html' => '<a href="https://civicrm.org/become-a-member?src=gs&sid='. $params['sid'] .'" target="_blank">Become a member</a> (<a href="http://civicrm.org/member-benefits?src=gs" target="_blank">review member benefits</a>)',
+        ),
+        'Events' => array(
+          'icon' => 'clock',
+          'html' => '<a href="https://civicrm.org/events?src=gs" target="_blank">View all CiviCRM events</a>',
+        ),
+      ),
     );
+    // CiviConnect was not available prior to v4.6.6
+    if (version_compare($params['ver'], '4.6.6')) {
+      unset($sections['Configure and extend']['CiviConnect']);
+    }
     
     $activeSites = $this->getSiteStats();
     // Header
     $output = '<div class="crm-block crm-content-block">';
     $activeSites = number_format($activeSites);
-    $output .= "<div id=\"help\">New to the CiviCRM community? Welcome! You've joined <b>$activeSites</b> other organizations that actively use CiviCRM to do a world of good. Here are a few resources to help you get started.</div>";
+    $output .= "<div id=\"help\">Used by over <b>$activeSites</b> organizations, CiviCRM is developed and maintained by a growing community of contributors. We welcome your support and encourage you to get involved!</div>";
 
     // Sections
     foreach ($sections as $title => $items) {
       $output .= "<h3>$title</h3><table><tbody>";
-      foreach ($items as $icon => $html) {
-        $output .= "<tr><td width=8>".$this->iconHtml($assets, $icon, 8)."</td><td>$html</td></tr>";
+      foreach ($items as $item) {
+        $output .= "<tr><td width=8>".$this->iconHtml($assets, $item['icon'], 8)."</td><td>$item[html]</td></tr>";
       }
       $output .= "</tbody></table>";
     }
