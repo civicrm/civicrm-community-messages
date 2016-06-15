@@ -108,7 +108,7 @@ class WelcomeController extends Controller {
         ),
         'CiviConnect' => array(
           'icon' => 'fullscreen-exit',
-          'html' => '<a href="{crmurl p=\'a/#/cxn\'}" target="_blank">Manage connected services</a>',
+          'html' => '<a href="{crmurl.civiconnect}" target="_blank">Manage connected services</a>',
         ),
         'Documentation' => array(
           'icon' => 'book',
@@ -160,10 +160,10 @@ class WelcomeController extends Controller {
         ),
       ),
     );
-    // CiviConnect was not available prior to v4.6.6
-    if (version_compare($params['ver'], '4.6.6')) {
-      unset($sections['Configure and extend']['CiviConnect']);
-    }
+	// Disabling CiviConnect until we find a way to create the token
+	// in CRM_Dashlet_Page_GettingStarted, lines 49-51
+	// and only display entry if token can be replaced
+    unset($sections['Configure and extend']['CiviConnect']);
     
     $activeSites = $this->getSiteStats();
     // Header
