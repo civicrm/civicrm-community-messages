@@ -69,6 +69,7 @@ class DefaultController extends Controller {
     try {
       $this->getArguments();
     } catch (\Exception $e) {
+      $this->createRequestFailure();
       return $this->renderJson($this->createErrorDocument($e->getMessage()));
     }
 
@@ -343,7 +344,6 @@ class DefaultController extends Controller {
           $this->args[$key] = $defaults[$key];
         }
         else {
-          $this->createRequestFailure();
           throw new \Exception("Error in $key");
         }
       }
