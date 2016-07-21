@@ -149,8 +149,11 @@ class DefaultController extends Controller {
         }
       }
       if ($row['ver']) {
-        list ($op, $ver) = explode(' ', $row['ver'], 2);
-        if (!version_compare($this->args['ver'], $ver, $op)) {
+        list ($op, $filterVersion) = explode(' ', $row['ver'], 2);
+        // Trim client version to sigFigs given so we accurately compare 4.x with 4.x.x
+        $sigFigs = substr_count($filterVersion, '.') + 1;
+        $clientVersion = implode('.', array_slice(explode('.', $this->args['ver']), 0, $sigFigs));
+        if (!version_compare($clientVersion, $filterVersion, $op)) {
           return FALSE;
         }
       }
