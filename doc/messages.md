@@ -12,6 +12,9 @@ Columns
 
   <dt>live</dt>
   <dd>("yes" "no" or "test"). <b>Warning</b> when this column is "yes" the message will <i>automatically</i> be published (generally in about an hour).</dd>
+
+  <dt>type</dt>
+  <dd>("offers", "events" or leave blank). Allows sites to opt-out of certain types of messages.</dd>
   
   <dt>reg</dt>
   <dd>Has this site registered? ("yes"/"no" or leave blank for no filtering). This is currently difficult to determine and there are many registered sites this system doesn't know about.</dd>
