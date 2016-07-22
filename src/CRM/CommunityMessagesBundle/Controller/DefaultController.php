@@ -163,6 +163,12 @@ class DefaultController extends Controller {
           return FALSE;
         }
       }
+      if (!empty($row['type']) && !empty($this->args['optout'])) {
+        $optOut = array_map('trim', explode(',', $this->args['optout']));
+        if (in_array($row['type'], $optOut)) {
+          return FALSE;
+        }
+      }
     }
     else {
       // Skip non-live messages except for test messages in test mode
@@ -336,6 +342,7 @@ class DefaultController extends Controller {
     );
     $defaults = array(
       'lang' => 'en_US',
+      'optout' => '',
     );
 
     foreach ($validations as $key => $regex) {
