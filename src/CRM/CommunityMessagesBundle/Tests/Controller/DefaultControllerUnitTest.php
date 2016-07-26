@@ -88,20 +88,42 @@ class DefaultControllerUnitTest extends \PHPUnit_Framework_TestCase {
       array('live' => 'yes', 'type' => 'events'),
       array('optout' => 'offers,asks'),
     );
+    $rows[] = array(
+      TRUE,
+      array('live' => 'yes', 'age' => '>1 week'),
+      array(),
+      array(),
+      array('created' => strtotime('now - 2 weeks')),
+    );
+    $rows[] = array(
+      TRUE,
+      array('live' => 'yes', 'age' => '> 1 month'),
+      array(),
+      array(),
+      array('created' => strtotime('now - 2 months')),
+    );
+    $rows[] = array(
+      FALSE,
+      array('live' => 'yes', 'age' => '< 1 week'),
+      array(),
+      array(),
+      array('created' => strtotime('now - 2 weeks')),
+    );
     return $rows;
   }
 
   /**
    * @dataProvider getRows
    */
-  public function testFilters($expectedResult, $row, $args = array(), $tokens = array()) {
+  public function testFilters($expectedResult, $row, $args = array(), $tokens = array(), $sidSummary = array()) {
     $mockContainer = $this->getMock("Symfony\Component\DependencyInjection\ContainerInterface");
     $mockApi = $this->getMockBuilder('\civicrm_api3')->disableOriginalConstructor()->getMock();
     $controller = new DefaultController($mockContainer, $mockApi);
     // Row defaults
     $row += array_fill_keys(array('reg', 'mem', 'ver', 'age', 'cms', 'type'), '');
-    $controller->args = $args;
+    $controller->args = $args + array('sid' => 123);
     $controller->tokens = $tokens;
+    $controller->sidSummary = $sidSummary + array('sid' => 123);
     $result = $controller->checkFilters($row);
     $this->assertEquals($expectedResult, $result);
   }

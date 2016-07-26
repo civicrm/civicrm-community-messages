@@ -25,6 +25,11 @@ class DefaultController extends Controller {
   public $tokens = array();
 
   /**
+   * @var array
+   */
+  public $sidSummary = NULL;
+
+  /**
    * @var bool
    */
   public $isTest = FALSE;
@@ -142,7 +147,9 @@ class DefaultController extends Controller {
         }
       }
       if ($row['age']) {
-        list ($op, $unit) = explode(' ', $row['age'], 2);
+        $matches = array();
+        preg_match('/([^\d]*)(.*)/', $row['age'], $matches);
+        list (, $op, $unit) = $matches;
         $diff = strtotime("now - $unit");
         $summary = $this->getSidSummary($this->args['sid']);
         if (eval("return {$summary['created']} $op $diff;")) {
@@ -299,13 +306,21 @@ class DefaultController extends Controller {
    * @return array
    */
   public function getSidSummary($sid) {
-    $cxn = $this->getDoctrine()->getConnection();
-    $result = $cxn->executeQuery('SELECT * FROM SidSummary WHERE sid = :sid', array('sid' => $sid));
-    foreach ($result as $row) {
-      return $row;
+    if (!isset($this->sidSummary)) {
+      $cxn = $this->getDoctrine()->getConnection();
+      $result = $cxn->executeQuery('SELECT * FROM SidSummary WHERE sid = :sid', array('sid' => $sid));
+      foreach ($result as $row) {
+        $this->sidSummary = $row;
+        break;
+      }
     }
+    return $this->sidSummary;
   }
 
+  /**
+   * @param $document
+   * @return \Symfony\Component\HttpFoundation\Response
+   */
   public function renderJson($document) {
     $response = new \Symfony\Component\HttpFoundation\Response(json_encode($document));
     $response->headers->set('Content-Type', 'application/json');
