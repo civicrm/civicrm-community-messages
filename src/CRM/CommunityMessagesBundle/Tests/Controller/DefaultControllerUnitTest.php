@@ -40,12 +40,22 @@ class DefaultControllerUnitTest extends \PHPUnit_Framework_TestCase {
     );
     $rows[] = array(
       TRUE,
+      array('live' => 'yes', 'ver' => '>=4.6'),
+      array('ver' => '4.6.1'),
+    );
+    $rows[] = array(
+      TRUE,
       array('live' => 'yes', 'ver' => '= 4.6'),
       array('ver' => '4.6.11'),
     );
     $rows[] = array(
       TRUE,
-      array('live' => 'yes', 'ver' => '= 4.6.0'),
+      array('live' => 'yes', 'ver' => '4.6'),
+      array('ver' => '4.6.11'),
+    );
+    $rows[] = array(
+      TRUE,
+      array('live' => 'yes', 'ver' => '== 4.6.0'),
       array('ver' => '4.6.0.alpha1'),
     );
     $rows[] = array(

@@ -26,7 +26,7 @@ Columns
   <dd>How old is this site? Requires an operator (&lt; or &gt;) + relative date. Examples: "&lt; 2 months", "&gt; 1 year"</dd>
   
   <dt>ver</dt>
-  <dd>Version of CiviCRM. Requires an operator (&lt;, &lt;=, &gt;, &gt;=, ==, !=) + version number. Examples: "&lt; 4.7", "&gt;= 4.6.5"</dd>
+  <dd>Version of CiviCRM. Optional operator (&lt;, &lt;=, &gt;, &gt;=, != or omit operator to assume ==) + version number. Examples: "&lt; 4.7", "&gt;= 4.6.5". Specifying a major version like "4.6" will include all point releases (4.6.1, 4.6.2 etc.).</dd>
   
   <dt>cms</dt>
   <dd>Drupal, Wordpress, Joomla, or Backdrop.</dd>

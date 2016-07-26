@@ -150,7 +150,11 @@ class DefaultController extends Controller {
         }
       }
       if ($row['ver']) {
-        list ($op, $filterVersion) = explode(' ', $row['ver'], 2);
+        $matches = array();
+        preg_match('/([^\d]*)(.*)/', $row['ver'], $matches);
+        list (, $op, $filterVersion) = $matches;
+        // If omitted, operator defaults to '=='
+        $op = trim($op) ? trim($op) : '==';
         // Trim client version to sigFigs given so we accurately compare 4.x with 4.x.x
         $sigFigs = substr_count($filterVersion, '.') + 1;
         $clientVersion = implode('.', array_slice(explode('.', $this->args['ver']), 0, $sigFigs));
