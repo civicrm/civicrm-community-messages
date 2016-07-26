@@ -69,6 +69,7 @@ class DefaultController extends Controller {
     try {
       $this->getArguments();
     } catch (\Exception $e) {
+      $this->createRequestFailure();
       return $this->renderJson($this->createErrorDocument($e->getMessage()));
     }
 
@@ -149,13 +150,22 @@ class DefaultController extends Controller {
         }
       }
       if ($row['ver']) {
-        list ($op, $ver) = explode(' ', $row['ver'], 2);
-        if (!version_compare($this->args['ver'], $ver, $op)) {
+        list ($op, $filterVersion) = explode(' ', $row['ver'], 2);
+        // Trim client version to sigFigs given so we accurately compare 4.x with 4.x.x
+        $sigFigs = substr_count($filterVersion, '.') + 1;
+        $clientVersion = implode('.', array_slice(explode('.', $this->args['ver']), 0, $sigFigs));
+        if (!version_compare($clientVersion, $filterVersion, $op)) {
           return FALSE;
         }
       }
       if ($row['cms']) {
         if (strpos(strtolower($this->args['uf']), strtolower($row['cms'])) !== 0) {
+          return FALSE;
+        }
+      }
+      if (!empty($row['type']) && !empty($this->args['optout'])) {
+        $optOut = array_map('trim', explode(',', $this->args['optout']));
+        if (in_array($row['type'], $optOut)) {
           return FALSE;
         }
       }
@@ -332,6 +342,7 @@ class DefaultController extends Controller {
     );
     $defaults = array(
       'lang' => 'en_US',
+      'optout' => '',
     );
 
     foreach ($validations as $key => $regex) {
@@ -340,7 +351,6 @@ class DefaultController extends Controller {
           $this->args[$key] = $defaults[$key];
         }
         else {
-          $this->createRequestFailure();
           throw new \Exception("Error in $key");
         }
       }

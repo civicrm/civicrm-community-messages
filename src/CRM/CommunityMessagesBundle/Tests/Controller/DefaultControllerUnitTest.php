@@ -40,6 +40,16 @@ class DefaultControllerUnitTest extends \PHPUnit_Framework_TestCase {
     );
     $rows[] = array(
       TRUE,
+      array('live' => 'yes', 'ver' => '= 4.6'),
+      array('ver' => '4.6.11'),
+    );
+    $rows[] = array(
+      TRUE,
+      array('live' => 'yes', 'ver' => '= 4.6.0'),
+      array('ver' => '4.6.0.alpha1'),
+    );
+    $rows[] = array(
+      TRUE,
       array('live' => 'yes', 'cms' => 'drupal'),
       array('uf' => 'Drupal8'),
     );
@@ -47,6 +57,20 @@ class DefaultControllerUnitTest extends \PHPUnit_Framework_TestCase {
       FALSE,
       array('live' => 'yes', 'cms' => 'Wordpress'),
       array('uf' => 'Joomla'),
+    );
+    $rows[] = array(
+      TRUE,
+      array('live' => 'yes', 'type' => 'offers'),
+    );
+    $rows[] = array(
+      FALSE,
+      array('live' => 'yes', 'type' => 'offers'),
+      array('optout' => 'offers'),
+    );
+    $rows[] = array(
+      TRUE,
+      array('live' => 'yes', 'type' => 'events'),
+      array('optout' => 'offers'),
     );
     return $rows;
   }
@@ -59,7 +83,7 @@ class DefaultControllerUnitTest extends \PHPUnit_Framework_TestCase {
     $mockApi = $this->getMockBuilder('\civicrm_api3')->disableOriginalConstructor()->getMock();
     $controller = new DefaultController($mockContainer, $mockApi);
     // Row defaults
-    $row += array_fill_keys(array('reg', 'mem', 'ver', 'age', 'cms'), '');
+    $row += array_fill_keys(array('reg', 'mem', 'ver', 'age', 'cms', 'type'), '');
     $controller->args = $args;
     $controller->tokens = $tokens;
     $result = $controller->checkFilters($row);
