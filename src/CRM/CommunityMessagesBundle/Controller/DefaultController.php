@@ -25,6 +25,11 @@ class DefaultController extends Controller {
   public $tokens = array();
 
   /**
+   * @var array
+   */
+  public $sidSummary = NULL;
+
+  /**
    * @var bool
    */
   public $isTest = FALSE;
@@ -142,7 +147,9 @@ class DefaultController extends Controller {
         }
       }
       if ($row['age']) {
-        list ($op, $unit) = explode(' ', $row['age'], 2);
+        $matches = array();
+        preg_match('/([^\d]*)(.*)/', $row['age'], $matches);
+        list (, $op, $unit) = $matches;
         $diff = strtotime("now - $unit");
         $summary = $this->getSidSummary($this->args['sid']);
         if (eval("return {$summary['created']} $op $diff;")) {
@@ -150,7 +157,11 @@ class DefaultController extends Controller {
         }
       }
       if ($row['ver']) {
-        list ($op, $filterVersion) = explode(' ', $row['ver'], 2);
+        $matches = array();
+        preg_match('/([^\d]*)(.*)/', $row['ver'], $matches);
+        list (, $op, $filterVersion) = $matches;
+        // If omitted, operator defaults to '=='
+        $op = trim($op) ? trim($op) : '==';
         // Trim client version to sigFigs given so we accurately compare 4.x with 4.x.x
         $sigFigs = substr_count($filterVersion, '.') + 1;
         $clientVersion = implode('.', array_slice(explode('.', $this->args['ver']), 0, $sigFigs));
@@ -165,7 +176,9 @@ class DefaultController extends Controller {
       }
       if (!empty($row['type']) && !empty($this->args['optout'])) {
         $optOut = array_map('trim', explode(',', $this->args['optout']));
-        if (in_array($row['type'], $optOut)) {
+        // We correct for a missing trailing "s" so the spreadsheet is more forgiving
+        // Typing "offers" or "offer" into the "type" column will both work.
+        if (in_array($row['type'], $optOut) || in_array($row['type'] . 's', $optOut)) {
           return FALSE;
         }
       }
@@ -293,13 +306,21 @@ class DefaultController extends Controller {
    * @return array
    */
   public function getSidSummary($sid) {
-    $cxn = $this->getDoctrine()->getConnection();
-    $result = $cxn->executeQuery('SELECT * FROM SidSummary WHERE sid = :sid', array('sid' => $sid));
-    foreach ($result as $row) {
-      return $row;
+    if (!isset($this->sidSummary)) {
+      $cxn = $this->getDoctrine()->getConnection();
+      $result = $cxn->executeQuery('SELECT * FROM SidSummary WHERE sid = :sid', array('sid' => $sid));
+      foreach ($result as $row) {
+        $this->sidSummary = $row;
+        break;
+      }
     }
+    return $this->sidSummary;
   }
 
+  /**
+   * @param $document
+   * @return \Symfony\Component\HttpFoundation\Response
+   */
   public function renderJson($document) {
     $response = new \Symfony\Component\HttpFoundation\Response(json_encode($document));
     $response->headers->set('Content-Type', 'application/json');

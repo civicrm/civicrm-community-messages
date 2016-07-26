@@ -14,7 +14,7 @@ Columns
   <dd>("yes" "no" or "test"). <b>Warning</b> when this column is "yes" the message will <i>automatically</i> be published (generally in about an hour).</dd>
 
   <dt>type</dt>
-  <dd>("offers", "events" or leave blank). Allows sites to opt-out of certain types of messages.</dd>
+  <dd>("offers", "events", "asks", "releases" or leave blank). Allows sites to opt-out of certain types of messages.</dd>
   
   <dt>reg</dt>
   <dd>Has this site registered? ("yes"/"no" or leave blank for no filtering). This is currently difficult to determine and there are many registered sites this system doesn't know about.</dd>
@@ -26,7 +26,7 @@ Columns
   <dd>How old is this site? Requires an operator (&lt; or &gt;) + relative date. Examples: "&lt; 2 months", "&gt; 1 year"</dd>
   
   <dt>ver</dt>
-  <dd>Version of CiviCRM. Requires an operator (&lt;, &lt;=, &gt;, &gt;=, ==, !=) + version number. Examples: "&lt; 4.7", "&gt;= 4.6.5"</dd>
+  <dd>Version of CiviCRM. Optional operator (&lt;, &lt;=, &gt;, &gt;=, != or omit operator to assume ==) + version number. Examples: "&lt; 4.7", "&gt;= 4.6.5". Specifying a major version like "4.6" will include all point releases (4.6.1, 4.6.2 etc.).</dd>
   
   <dt>cms</dt>
   <dd>Drupal, Wordpress, Joomla, or Backdrop.</dd>
