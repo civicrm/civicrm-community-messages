@@ -165,7 +165,9 @@ class DefaultController extends Controller {
       }
       if (!empty($row['type']) && !empty($this->args['optout'])) {
         $optOut = array_map('trim', explode(',', $this->args['optout']));
-        if (in_array($row['type'], $optOut)) {
+        // We correct for a missing trailing "s" so the spreadsheet is more forgiving
+        // Typing "offers" or "offer" into the "type" column will both work.
+        if (in_array($row['type'], $optOut) || in_array($row['type'] . 's', $optOut)) {
           return FALSE;
         }
       }

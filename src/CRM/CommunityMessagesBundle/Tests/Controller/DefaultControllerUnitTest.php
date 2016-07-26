@@ -65,12 +65,18 @@ class DefaultControllerUnitTest extends \PHPUnit_Framework_TestCase {
     $rows[] = array(
       FALSE,
       array('live' => 'yes', 'type' => 'offers'),
+      array('optout' => 'offers,events'),
+    );
+    $rows[] = array(
+      FALSE,
+      // "offer" and "offers" should both work - it should ignore the trailing "s"
+      array('live' => 'yes', 'type' => 'offer'),
       array('optout' => 'offers'),
     );
     $rows[] = array(
       TRUE,
       array('live' => 'yes', 'type' => 'events'),
-      array('optout' => 'offers'),
+      array('optout' => 'offers,asks'),
     );
     return $rows;
   }
