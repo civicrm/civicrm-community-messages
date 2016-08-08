@@ -13,7 +13,7 @@ class WelcomeController extends Controller {
     // Parse arguments
     $validations = array(
       'prot' => '/^1$/',
-      'sid' => '/^[a-zA-Z0-9]{32}$/',
+      'sid' => '/^(test_mode|[a-zA-Z0-9]{32})$/',
       'uf' => '/^(Backdrop|Drupal|Drupal6|Drupal8|WordPress|Joomla|UnitTests)$/',
       'ver' => '/^([0-9\.]|alpha|beta|dev|rc){2,12}$/',
     );
