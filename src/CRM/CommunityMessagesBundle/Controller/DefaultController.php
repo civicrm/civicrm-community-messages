@@ -360,14 +360,14 @@ class DefaultController extends Controller {
       'uf' => '/^(Backdrop|Drupal|Drupal6|Drupal8|WordPress|Joomla|UnitTests)$/',
       'ver' => '/^([0-9\.]|alpha|beta|dev|rc){2,12}$/',
       'lang' => '/^[a-z]+_[A-Z]+$/',
+      'optout' => NULL,
     );
     $defaults = array(
       'lang' => 'en_US',
-      'optout' => '',
     );
 
     foreach ($validations as $key => $regex) {
-      if (!$this->isTest && !preg_match($regex, $this->getRequest()->get($key))) {
+      if (!$this->isTest && $regex && !preg_match($regex, $this->getRequest()->get($key))) {
         if (isset($defaults[$key])) {
           $this->args[$key] = $defaults[$key];
         }
