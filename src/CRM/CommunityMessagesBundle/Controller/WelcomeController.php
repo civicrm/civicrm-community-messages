@@ -183,11 +183,17 @@ class WelcomeController extends Controller {
 	// and only display entry if token can be replaced
     unset($sections['Configure and extend']['CiviConnect']);
     
-    $activeSites = $this->getSiteStats();
     // Header
-    $output = '<div class="crm-block crm-content-block">';
-    $activeSites = number_format($activeSites);
-    $output .= "<div id=\"help\">Used by over <b>$activeSites</b> organizations, CiviCRM is developed and maintained by a growing community of contributors. We welcome your support and encourage you to get involved!</div>";
+    // FIXME: sometime after Jul 20, simplify this code.
+    if (time() > strtotime('2017-07-20 00:00:00')) {
+      $activeSites = $this->getSiteStats();
+      $output = '<div class="crm-block crm-content-block">';
+      $activeSites = number_format($activeSites);
+      $output .= "<div id=\"help\">Used by over <b>$activeSites</b> organizations, CiviCRM is developed and maintained by a growing community of contributors. We welcome your support and encourage you to get involved!</div>";
+    }
+    else {
+      $output .= "<div id=\"help\">CiviCRM is developed and maintained by a growing community of contributors. We welcome your support and encourage you to get involved!</div>";
+    }
 
     // Sections
     foreach ($sections as $title => $items) {
