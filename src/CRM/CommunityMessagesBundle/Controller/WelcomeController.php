@@ -98,7 +98,7 @@ class WelcomeController extends Controller {
     return $response;
 
   }
-  
+
   public function gettingStarted($params) {
     $sections = array(
       'Configure and extend' => array(
@@ -159,7 +159,7 @@ class WelcomeController extends Controller {
         'Register your site' => array(
           'icon' => 'fa-flag',
           'img' => 'flag',
-          'html' => '<a href="https://civicrm.org/register-your-site?src=gs&sid='. $params['sid'] .'" target="_blank">Register your site with CiviCRM</a>',
+          'html' => '<a href="https://civicrm.org/register-your-site?src=gs&sid=' . $params['sid'] . '" target="_blank">Register your site with CiviCRM</a>',
         ),
         'Meetups' => array(
           'icon' => 'fa-users',
@@ -169,7 +169,7 @@ class WelcomeController extends Controller {
         'Become a member' => array(
           'icon' => 'fa-user-plus',
           'img' => 'person',
-          'html' => '<a href="https://civicrm.org/become-a-member?src=gs&sid='. $params['sid'] .'" target="_blank">Become a member</a> (<a href="http://civicrm.org/member-benefits?src=gs" target="_blank">review member benefits</a>)',
+          'html' => '<a href="https://civicrm.org/become-a-member?src=gs&sid=' . $params['sid'] . '" target="_blank">Become a member</a> (<a href="http://civicrm.org/member-benefits?src=gs" target="_blank">review member benefits</a>)',
         ),
         'Events' => array(
           'icon' => 'fa-calendar',
@@ -178,11 +178,11 @@ class WelcomeController extends Controller {
         ),
       ),
     );
-	// Disabling CiviConnect until we find a way to create the token
-	// in CRM_Dashlet_Page_GettingStarted, lines 49-51
-	// and only display entry if token can be replaced
+    // Disabling CiviConnect until we find a way to create the token
+    // in CRM_Dashlet_Page_GettingStarted, lines 49-51
+    // and only display entry if token can be replaced
     unset($sections['Configure and extend']['CiviConnect']);
-    
+
     // Header
     // FIXME: sometime after Jul 20, simplify this code.
     if (time() > strtotime('2017-07-20 00:00:00')) {
@@ -199,7 +199,7 @@ class WelcomeController extends Controller {
     foreach ($sections as $title => $items) {
       $output .= "<h3>$title</h3><table><tbody>";
       foreach ($items as $item) {
-        $output .= "<tr><td width=8>".$this->iconHtml($item)."</td><td>$item[html]</td></tr>";
+        $output .= "<tr><td width=8>" . $this->iconHtml($item) . "</td><td>$item[html]</td></tr>";
       }
       $output .= "</tbody></table>";
     }
@@ -220,16 +220,17 @@ class WelcomeController extends Controller {
       return '<i class="crm-i ' . $item['icon'] . '"></i>';
     }
   }
-  
+
   public function getSiteStats() {
     $activeSites = 10000;
     $stats = file_get_contents('http://stats.civicrm.org/json/active-sites-stats.json');
-    if(!empty($stats)) {
-      $stats = reset(json_decode($stats, true));
+    if (!empty($stats)) {
+      $stats = reset(json_decode($stats, TRUE));
       if (!empty($stats) && !empty($stats['active_sites'])) {
         $activeSites = $stats['active_sites'];
       }
     }
     return $activeSites;
   }
+
 }

@@ -54,7 +54,7 @@ class DefaultController extends Controller {
 
   /**
    * Mapping between string in the csv file and allowed statuses
-   */ 
+   */
   public $statusRules = array(
     "yes" => array('New', 'Current', 'Grace'),
     "new" => array('New'),
@@ -63,7 +63,7 @@ class DefaultController extends Controller {
     "past" => array('Expired', 'Cancelled', 'Deceased'),
   );
 
-  function __construct(ContainerInterface $container, \civicrm_api3 $api) {
+  public function __construct(ContainerInterface $container, \civicrm_api3 $api) {
     $this->setContainer($container);
     $this->api = $api;
   }
@@ -73,7 +73,8 @@ class DefaultController extends Controller {
 
     try {
       $this->getArguments();
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       $this->createRequestFailure();
       return $this->renderJson($this->createErrorDocument($e->getMessage()));
     }
@@ -333,7 +334,7 @@ class DefaultController extends Controller {
    * @param string $fileName
    * @return array
    */
-  public function getAssocCSV ($fileName) {
+  public function getAssocCSV($fileName) {
     $file = fopen($fileName, 'r');
     $data = array();
     while ($row = fgetcsv($file)) {
@@ -402,4 +403,5 @@ class DefaultController extends Controller {
 
     return $fileName;
   }
+
 }
