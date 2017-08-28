@@ -109,6 +109,21 @@ class DefaultControllerUnitTest extends \PHPUnit_Framework_TestCase {
       array(),
       array('created' => strtotime('now - 2 weeks')),
     );
+    $rows[] = array(
+      TRUE,
+      array('live' => 'yes', 'country' => 'GB'),
+      array('co' => '1226'),
+    );
+    $rows[] = array(
+      FALSE,
+      array('live' => 'yes', 'country' => 'GB, UM, US'),
+      array('co' => '1225'),
+    );
+    $rows[] = array(
+      TRUE,
+      array('live' => 'yes', 'country' => 'Europe, Americas'),
+      array('co' => '1226'),
+    );
     return $rows;
   }
 
@@ -120,11 +135,12 @@ class DefaultControllerUnitTest extends \PHPUnit_Framework_TestCase {
     $mockApi = $this->getMockBuilder('\civicrm_api3')->disableOriginalConstructor()->getMock();
     $controller = new DefaultController($mockContainer, $mockApi);
     // Row defaults
-    $row += array_fill_keys(array('reg', 'mem', 'ver', 'age', 'cms', 'type'), '');
+    $row += array_fill_keys(array('reg', 'mem', 'ver', 'age', 'cms', 'type', 'country'), '');
     $controller->args = $args + array('sid' => 123);
     $controller->tokens = $tokens;
     $controller->sidSummary = $sidSummary + array('sid' => 123);
     $result = $controller->checkFilters($row);
     $this->assertEquals($expectedResult, $result);
   }
+
 }

@@ -37,6 +37,9 @@ Columns
   <dt>perms</dt>
   <dd>(comma-separated e.g. "access CiviCRM") - if supplied, only users with this permission will see the message. If left blank, defaults to "administer CiviCRM".</dd>
   
+  <dt>country</dt>
+  <dd>(comma-separated e.g. "US, Europe, Australia") - if supplied, limits the audience to sites in the specified countries or regions. Country names (United States), 2-letter ISO codes (US) or world regions (Americas) can all be used. <a href="countries.md">See full list of countries, codes and regions.</a></dd>
+  
   <h4>Content:</h4>
   
   <dt>url</dt>

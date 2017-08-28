@@ -175,6 +175,16 @@ class DefaultController extends Controller {
           return FALSE;
         }
       }
+      if ($row['country']) {
+        $json = file_get_contents(__DIR__ . '/../Resources/data/countries.json');
+        $countries = json_decode($json, TRUE);
+        $country = empty($this->args['co']) ? $countries[1228] : $countries[$this->args['co']];
+        $selected = array_map('trim', explode(',', $row['country']));
+        // This will match by country name, iso_code or world region
+        if (!array_intersect($selected, $country)) {
+          return FALSE;
+        }
+      }
       if (!empty($row['type']) && !empty($this->args['optout'])) {
         $optOut = array_map('trim', explode(',', $this->args['optout']));
         // We correct for a missing trailing "s" so the spreadsheet is more forgiving
@@ -362,6 +372,7 @@ class DefaultController extends Controller {
       'ver' => '/^([0-9\.]|alpha|beta|dev|rc){2,12}$/',
       'lang' => '/^[a-z]+_[A-Z]+$/',
       'optout' => NULL,
+      'co' => NULL,
     );
     $defaults = array(
       'lang' => 'en_US',
