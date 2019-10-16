@@ -1,7 +1,7 @@
 Updating Community Messages:
 ========================
 
-Community messages are stored in a [Google Spreadsheet](https://docs.google.com/spreadsheets/d/1OnJXtxTaS3FfQRMHLffPETdDKk3OHmd1fxLc8zQt9PE/edit). All items in the spreadsheet will be shown to users on a random/rotating basis. Users will only be shown a message if they meet all the specified criteria.
+Community messages are stored in a [Google Spreadsheet](https://docs.google.com/spreadsheets/d/1OnJXtxTaS3FfQRMHLffPETdDKk3OHmd1fxLc8zQt9PE/edit). Changes to that sheet are deployed automatically. If a site meets all the criteria for a given message, it will be shown on the CiviCRM dashboard. If more than one message matches the criteria for a given site, users will be randomly shown a different message each time they visit their dashboard.
 
 Note: the order of the columns in the spreadsheet does not matter, but the names do. Do not rename any column header without also updating the code which depends on it.
 

@@ -43,6 +43,10 @@ $civicrm_setting['CiviCRM Preferences']['communityMessagesUrl']
  = 'http://messages.local/alert?prot=1&ver={ver}&uf={uf}&sid={sid}&lang={lang}&co={co}';
 ```
 
+## Testing
+
+Use the command `phpunit -c app` to run unit tests.
+
 ## Troubleshooting
 
 ### 504 Gateway Timeout
