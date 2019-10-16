@@ -184,16 +184,8 @@ class WelcomeController extends Controller {
     unset($sections['Configure and extend']['CiviConnect']);
 
     // Header
-    // FIXME: sometime after Jul 20, simplify this code.
-    if (time() > strtotime('2017-07-20 00:00:00')) {
-      $activeSites = $this->getSiteStats();
-      $output = '<div class="crm-block crm-content-block">';
-      $activeSites = number_format($activeSites);
-      $output .= "<div id=\"help\">Used by over <b>$activeSites</b> organizations, CiviCRM is developed and maintained by a growing community of contributors. We welcome your support and encourage you to get involved!</div>";
-    }
-    else {
-      $output .= "<div id=\"help\">CiviCRM is developed and maintained by a growing community of contributors. We welcome your support and encourage you to get involved!</div>";
-    }
+    $output = '<div class="crm-block crm-content-block">';
+    $output .= "<div id=\"help\">Created by contributors around the world, CiviCRM is, at its heart, built to impact the world. As open source software, CiviCRM is made freely available for use and improvement, serving organizations whose missions collectively impact and improve the world in which we live. Please <a href='https://civicrm.org/civicrm/contribute/transact?reset=1&id=47&src=gs' target='_blank'>donate to support the project</a> and see <a href='https://civicrm.org/get-involved?src=gs' target='_blank'>other ways to get involved</a>!</div>";
 
     // Sections
     foreach ($sections as $title => $items) {
