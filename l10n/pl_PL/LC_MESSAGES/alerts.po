@@ -1,0 +1,77 @@
+# Translators:
+# Dariusz Koryto <dariusz@koryto.eu>, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: alerts\n"
+"POT-Creation-Date: 2020-01-21 16:29-0500\n"
+"Last-Translator: Dariusz Koryto <dariusz@koryto.eu>, 2020\n"
+"Language-Team: Polish (https://www.transifex.com/civicrm/teams/1905/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+msgid ""
+"Created by contributors around the world, CiviCRM is, at its heart, built to"
+" impact the world. As open source software, CiviCRM is made freely available"
+" for use and improvement, serving organizations whose missions collectively "
+"impact and improve the world in which we live. Please <a %1>donate to "
+"support the project</a> and see <a %2>other ways to get involved</a>!"
+msgstr ""
+"Stworzony przez współpracowników z całego świata, CiviCRM jest, w jego "
+"sercu, stworzony, aby wpływać na świat. Jako oprogramowanie typu open "
+"source, CiviCRM jest udostępniany bezpłatnie do użytku i ulepszania, służąc "
+"organizacjom, których misje wspólnie wpływają i ulepszają świat, w którym "
+"żyjemy. Proszę <a %1>wpłatę, aby wesprzeć projekt</a> i zobacz <a %2>inne "
+"sposoby na zaangażowanie się</a>!"
+
+msgid "Configure and extend"
+msgstr "Skonfiguruj i rozszerz"
+
+msgid "Get support"
+msgstr "Uzyskać wsparcie"
+
+msgid "Get involved"
+msgstr "Zaangażować się"
+
+msgid "Enhance CiviCRM with extensions"
+msgstr "Ulepsz CiviCRM dzięki rozszerzeniom"
+
+msgid "Configuration checklist"
+msgstr "Lista kontrolna konfiguracji"
+
+msgid "Review CiviCRM documentation"
+msgstr "Przejrzyj dokumentację CiviCRM"
+
+msgid "Jump in and chat with the community"
+msgstr "Wskocz i czatuj ze społecznością"
+
+msgid "Ask a question on Stack Exchange"
+msgstr "Zadaj pytanie na Stack Exchange"
+
+msgid "Find upcoming trainings"
+msgstr "Znajdź nadchodzące szkolenia"
+
+msgid "Get support from the CiviCRM experts"
+msgstr "Uzyskaj wsparcie od ekspertów CiviCRM"
+
+msgid "<a %1>Register with</a> or <a %2>log into</a> CiviCRM.org"
+msgstr "<a %1>Zarejestruj się</a> lub <a %2>zaloguj się</a> CiviCRM.org"
+
+msgid "Manage your preferences with CiviCRM"
+msgstr "Zarządzaj swoimi preferencjami za pomocą CiviCRM"
+
+msgid "Register your site with CiviCRM"
+msgstr "Zarejestruj swoją witrynę w CiviCRM"
+
+msgid "Find a meetup in your area"
+msgstr "Znajdź spotkanie w swojej okolicy"
+
+msgid "<a %1>Become a member</a> (<a %2>review member benefits</a>)"
+msgstr ""
+"<a %1>Zostań członkiem</a> (<a %2>sprawdź świadczenia dla członków</a>)"
+
+msgid "View all CiviCRM events"
+msgstr "Zobacz wszystkie zdarzenia CiviCRM"

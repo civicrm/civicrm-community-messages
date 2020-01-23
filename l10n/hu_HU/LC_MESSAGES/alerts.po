@@ -1,0 +1,77 @@
+# Translators:
+# Zoltán Reizinger <zreizinger@hdsnet.hu>, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: alerts\n"
+"POT-Creation-Date: 2020-01-21 16:29-0500\n"
+"Last-Translator: Zoltán Reizinger <zreizinger@hdsnet.hu>, 2020\n"
+"Language-Team: Hungarian (https://www.transifex.com/civicrm/teams/1905/hu/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid ""
+"Created by contributors around the world, CiviCRM is, at its heart, built to"
+" impact the world. As open source software, CiviCRM is made freely available"
+" for use and improvement, serving organizations whose missions collectively "
+"impact and improve the world in which we live. Please <a %1>donate to "
+"support the project</a> and see <a %2>other ways to get involved</a>!"
+msgstr ""
+"A CiviCRM, amelyet a közreműködők hoztak létre a világ minden tájáról, a "
+"szívében épül, hogy hatással legyen a világra. Nyílt forráskódú szoftverként"
+" a CiviCRM szabadon hozzáférhető felhasználásra és fejlesztésre, szolgálva "
+"azokat a szervezeteket, amelyek együtt befolyásolják és javítják azt a "
+"világot, amelyben élünk. Kérjük,<a %1> adományozzon a projekt "
+"támogatására</a> és <a %2>vegyen részt benne</a>!"
+
+msgid "Configure and extend"
+msgstr "Beállítás és kiterjesztés"
+
+msgid "Get support"
+msgstr "Támogatás kérés"
+
+msgid "Get involved"
+msgstr "Legyen részese"
+
+msgid "Enhance CiviCRM with extensions"
+msgstr "Fejlessze a CiviCRM rendszerét kiterjesztésekkel "
+
+msgid "Configuration checklist"
+msgstr "Beállítási ellenőrzőlista"
+
+msgid "Review CiviCRM documentation"
+msgstr "Nézze meg a CiviCRM dokumentációt"
+
+msgid "Jump in and chat with the community"
+msgstr "Ugorjon és csevegjen a közösségel"
+
+msgid "Ask a question on Stack Exchange"
+msgstr "Kérdezzen a Stack Exchange oldalán"
+
+msgid "Find upcoming trainings"
+msgstr "Keressen a közeljövő képzéseiben"
+
+msgid "Get support from the CiviCRM experts"
+msgstr "Kérjen támogatást a CiviCRM szakértőktől"
+
+msgid "<a %1>Register with</a> or <a %2>log into</a> CiviCRM.org"
+msgstr ""
+"<a %1>Regisztrájon</a> vagy <a %2>jelentkezzen be</a>CiviCRM.org oldalra"
+
+msgid "Manage your preferences with CiviCRM"
+msgstr "Kezelje preferenciáit a CiviCRM segítségével"
+
+msgid "Register your site with CiviCRM"
+msgstr "Regisztrálja a CiviCRM oldalát"
+
+msgid "Find a meetup in your area"
+msgstr "Keressen meetupot a környékén"
+
+msgid "<a %1>Become a member</a> (<a %2>review member benefits</a>)"
+msgstr "<a %1>Legyen tag</a> (<a %2>nézze át a tagság előnyeit</a>)"
+
+msgid "View all CiviCRM events"
+msgstr "Az összes CiviCM esemény megtekintése"
