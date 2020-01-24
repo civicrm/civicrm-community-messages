@@ -1,0 +1,71 @@
+# Translators:
+# Mathieu Lu <mathieu@bidon.ca>, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: alerts\n"
+"POT-Creation-Date: 2020-01-21 16:29-0500\n"
+"Last-Translator: Mathieu Lu <mathieu@bidon.ca>, 2020\n"
+"Language-Team: Bulgarian (https://www.transifex.com/civicrm/teams/1905/bg/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: bg\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid ""
+"Created by contributors around the world, CiviCRM is, at its heart, built to"
+" impact the world. As open source software, CiviCRM is made freely available"
+" for use and improvement, serving organizations whose missions collectively "
+"impact and improve the world in which we live. Please <a %1>donate to "
+"support the project</a> and see <a %2>other ways to get involved</a>!"
+msgstr ""
+
+msgid "Configure and extend"
+msgstr "Конфигурирайте и разширете"
+
+msgid "Get support"
+msgstr "Получаване на поддръжка"
+
+msgid "Get involved"
+msgstr "Включете се"
+
+msgid "Enhance CiviCRM with extensions"
+msgstr "Подобрете CiviCRM с разширения"
+
+msgid "Configuration checklist"
+msgstr "Конфигурация на контролния списък"
+
+msgid "Review CiviCRM documentation"
+msgstr "Документация за CiviCRM"
+
+msgid "Jump in and chat with the community"
+msgstr "Чат с общността на CiviCRM"
+
+msgid "Ask a question on Stack Exchange"
+msgstr "Задайте въпрос на Stack Exchange"
+
+msgid "Find upcoming trainings"
+msgstr "Намерете предстоящи обучения"
+
+msgid "Get support from the CiviCRM experts"
+msgstr "Получете подкрепа от експертите на CiviCRM"
+
+msgid "<a %1>Register with</a> or <a %2>log into</a> CiviCRM.org"
+msgstr "<a %1>Регистрирайте се</a> или <a %2>влезте в</a> CiviCRM.org"
+
+msgid "Manage your preferences with CiviCRM"
+msgstr "Управлявайте своите предпочитания за комуникация с CiviCRM"
+
+msgid "Register your site with CiviCRM"
+msgstr "Регистрирайте сайта си с CiviCRM"
+
+msgid "Find a meetup in your area"
+msgstr "Намерете среща във вашия район"
+
+msgid "<a %1>Become a member</a> (<a %2>review member benefits</a>)"
+msgstr ""
+"<a %1>Станете член</a> (<a %2>прегледайте предимствата на членовете</a>)"
+
+msgid "View all CiviCRM events"
+msgstr "Вижте всички събития на CiviCRM"

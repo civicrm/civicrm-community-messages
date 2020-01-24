@@ -31,6 +31,13 @@ composer install
 ./app/console doctrine:schema:create
 ```
 
+Then compile the translation files:
+
+```
+cd l10n
+for i in *_*; do msgfmt $i/LC_MESSAGES/alerts.po -o $i/LC_MESSAGES/alerts.mo; done
+```
+
 Then setup your http server (per preference).
 
 ## Configuration (CiviCRM)
