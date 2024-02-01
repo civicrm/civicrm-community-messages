@@ -1,44 +1,11 @@
-<style type="text/css">
-  div.civicrm-community-messages {
-    border: 2px solid #7dc857;
-    padding: 10px;
-    position: relative;
-  }
-  div.civicrm-community-messages .crm-collapsible .collapsible-title {
-    font-weight: normal;
-    color: #056085;
-  }
-  div.civicrm-community-messages .crm-collapsible .collapsible-title:hover {
-    color: #003676;
-  }
-  div.civicrm-community-messages a.civicrm-community-message-dismiss {
-    position: absolute;
-    opacity: .6;
-    top: 2px;
-    right: 2px;
-  }
-  div.civicrm-community-messages a.civicrm-community-message-dismiss:hover {
-    opacity: 1;
-  }
-  div.civicrm-community-messages .collapsed .collapsible-title div {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  div.civicrm-community-messages .collapsed .collapsible-title div:after {
-    content: " \2026";
-  }
-</style>
-
 {# Messages are intiailly hidden then shown via js instead of the other way around to avoid initial flash #}
-<div style="display:none" class="civicrm-community-messages">
-  <a href="javascript:void(0)" class="civicrm-community-message-dismiss ui-icon ui-icon-circle-close" title="Dismiss"></a>
-  <div class="crm-collapsible collapsed">
-    <div class="collapsible-title">
-      <div>{{ title|raw }}</div>
-    </div>
-    <div style="margin-top: 1em;">{{ body|raw }}</div>
-  </div>
+
+<div class="messages help civicrm-community-messages" style="display:none">
+  <a href="javascript:void(0)" title="Dismiss" class="crm-i fa-times float-right civicrm-community-message-dismiss"></a>
+  <details>
+    <summary><strong>{{ title|raw }}</strong></summary>
+    <div class="crm-accordion-body">{{ body|raw }}</div>
+  </details>
 </div>
 
 <script type="text/javascript">
